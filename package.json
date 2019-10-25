@@ -1,0 +1,15 @@
+{
+  "name": "webxr-simgame",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ecsy": "^0.1.4",
+    "three": "^0.109.0"
+  }
+}
