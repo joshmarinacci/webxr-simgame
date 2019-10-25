@@ -1,4 +1,4 @@
-import {Group, PerspectiveCamera, Scene, WebGLRenderer} from "../node_modules/three/build/three.module.js"
+import {Clock, Group, PerspectiveCamera, Scene, WebGLRenderer} from "../node_modules/three/build/three.module.js"
 import {System} from "../node_modules/ecsy/build/ecsy.module.js"
 import {WEBVR} from "../node_modules/three/examples/jsm/vr/WebVR.js"
 
@@ -17,6 +17,9 @@ export class ThreeCore {
     getCanvas() {
         if(!this.canvas) throw new Error("canvas not initialized")
         return this.canvas
+    }
+    getStage() {
+        return this.stage
     }
 }
 
@@ -65,4 +68,20 @@ ThreeSystem.queries = {
     three: {
         components:[ThreeCore]
     }
+}
+
+
+export function startWorldLoop(app, world) {
+    const core = app.getMutableComponent(ThreeCore)
+    const clock = new Clock();
+    core.renderer.setAnimationLoop(()=> {
+        const delta = clock.getDelta();
+        const elapsedTime = clock.elapsedTime;
+        world.execute(delta, elapsedTime)
+        core.renderer.render(core.scene, core.camera)
+    })
+}
+
+export function oneWorldTick(app, world) {
+    world.execute(0.1,0)
 }

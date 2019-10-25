@@ -1,17 +1,15 @@
 import {AmbientLight, Clock, Color, DirectionalLight} from "../node_modules/three/build/three.module.js"
 import {World} from "../node_modules/ecsy/build/ecsy.module.js"
 import {ThreeCore, ThreeSystem} from "./threesystem.js"
-import {Button3D, Hex3dsystem, ScoreBoard} from './hex3dsystem.js'
+import {Button3D, Hex3dsystem, HexMapView, ScoreBoard} from './hex3dsystem.js'
 import {MouseInputDevice, MouseInputSystem} from './mousesystem.js'
 import {KeyboardInputSystem} from "./keyboardsystem.js"
 import {VRInputSystem} from './vrinputsystem.js'
-import {GameState, GameStateEnums, InputModes, LogicSystem} from "./logic2.js"
+import {GameState, GameStateEnums, HexMapComp, InputModes, LogicSystem} from "./logic2.js"
 import {Level, LevelsSystem} from './levelssystem.js'
 import {VRStats, VRStatsSystem} from './vrstats.js'
 import {setupLevels} from './levels.js'
 import {Instructions3D, Instructions3DSystem} from './Instructions3D.js'
-import {HexMapComp} from './logic2.js'
-import {HexMapView} from './hex3dsystem.js'
 
 
 let game
