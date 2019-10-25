@@ -25,7 +25,7 @@ const Y_AXIS = new Vector3(0,1,0)
 const ROT_SPEED = 0.03
 const MOVE_SPEED = 0.2
 
-class VRController {
+export class VRController {
     constructor() {
         this.raycaster = new Raycaster()
         this.vrid = -1
@@ -39,11 +39,6 @@ export class VRInputSystem extends System {
         this.started = false
     }
     execute() {
-        if(!this.started) {
-            this.started = true
-            this.world.createEntity().addComponent(VRController,{vrid:0})
-            this.world.createEntity().addComponent(VRController,{vrid:1})
-        }
 
         const core = this.queries.three.results[0].getMutableComponent(ThreeCore)
         this.queries.controllers.added.forEach(ent => {

@@ -1,4 +1,5 @@
 import {
+    BoxBufferGeometry,
     AmbientLight,
     Color,
     DirectionalLight,
@@ -9,12 +10,21 @@ import {
 } from "../node_modules/three/build/three.module.js"
 import {System, World} from "../node_modules/ecsy/build/ecsy.module.js"
 import {oneWorldTick, startWorldLoop, ThreeCore, ThreeSystem} from "./threesystem.js"
-import {VRInputSystem} from './vrinputsystem.js'
+import {VRController, VRInputSystem} from './vrinputsystem.js'
 
 class SimpleSphere {
     constructor() {
+        this.obj = null
         this.color = 'blue'
         this.position = new Vector3()
+    }
+}
+class Hand {
+    constructor() {
+        this.obj = null
+        this.grabbed = null
+        this.color = 'yellow'
+        this.canGrab = true
     }
 }
 class Grabable {
@@ -23,6 +33,7 @@ class Grabable {
 
 class SimpleSphereSystem extends System {
     execute() {
+
         this.queries.objs.added.forEach(ent => {
             const core = this.queries.three.results[0].getComponent(ThreeCore)
             const sphere = ent.getMutableComponent(SimpleSphere)
@@ -30,9 +41,63 @@ class SimpleSphereSystem extends System {
                 new SphereBufferGeometry(1.0),
                 new MeshLambertMaterial({color:sphere.color})
             )
-            sphere.obj.position.z = sphere.position.z
-            console.log("adding sphere")
-            core.getStage().add(sphere.obj)
+            if(sphere.position && sphere.position.x) sphere.obj.position.x = sphere.position.x
+            if(sphere.position && sphere.position.z) sphere.obj.position.z = sphere.position.z
+            if(ent.hasComponent(VRController)) {
+                console.log('adding a sphere')
+                ent.getComponent(VRController).controller.add(sphere.obj)
+            } else {
+                core.getStage().add(sphere.obj)
+            }
+        })
+        this.queries.objs.removed.forEach(ent => {
+            console.log("removing a sphere")
+            const sphere = ent.getRemovedComponent(SimpleSphere)
+            if(sphere) sphere.obj.parent.remove(sphere.obj)
+        })
+
+        this.queries.hands.added.forEach(ent => {
+            const hand = ent.getMutableComponent(Hand)
+            hand.obj = new Mesh(
+                new BoxBufferGeometry(0.5,0.5,2.5).translate(0,0,1),
+                new MeshLambertMaterial({color:hand.color})
+            )
+            const con = ent.getMutableComponent(VRController)
+            con.controller.add(hand.obj)
+        })
+
+        this.queries.hands.results.forEach(enta => {
+            const hand = enta.getComponent(Hand)
+            const ca = new Vector3()
+            hand.obj.localToWorld(ca)
+            this.queries.objs.results.forEach(entb => {
+                const sphere = entb.getComponent(SimpleSphere)
+                if(!sphere.obj) return
+                const cb = new Vector3()
+                sphere.obj.localToWorld(cb)
+                // if(enta !== ent) {
+                    const dist = ca.distanceTo(cb)
+                    if(dist === 0) return
+                    if(dist <= 2) {
+                        console.log("close")
+                        if(hand.grabbed !== entb ) {
+                            console.log("grab it",entb)
+                            hand.grabbed = entb
+                            let color = sphere.color
+                            setTimeout(()=>{
+                                if(enta.hasComponent(SimpleSphere)) {
+                                    console.log("triggering remove")
+                                    enta.removeComponent(SimpleSphere)
+                                }
+                                setTimeout(()=>{
+                                    console.log('triggering an add')
+                                    enta.addComponent(SimpleSphere,{color:color})
+                                },0)
+                            },0)
+                        }
+                    }
+                // }
+            })
         })
     }
 }
@@ -41,6 +106,16 @@ SimpleSphereSystem.queries = {
         components:[SimpleSphere],
         listen:{
             added:true,
+            removed:true,
+        }
+    },
+    grabable: {
+        components:[SimpleSphere,Grabable]
+    },
+    hands: {
+        components:[Hand, VRController],
+        listen: {
+            added:true
         }
     },
     three: {
@@ -64,6 +139,13 @@ function setup() {
 
     const core = app.getMutableComponent(ThreeCore)
 
+    world.createEntity()
+        .addComponent(VRController,{vrid:0})
+        .addComponent(Hand)
+    world.createEntity()
+        .addComponent(VRController,{vrid:1})
+        .addComponent(Hand)
+
 
     //setup some lights
     core.scene.background = new Color( 0xcccccc );
@@ -74,7 +156,11 @@ function setup() {
 
 
     const sphere = world.createEntity()
-    sphere.addComponent(SimpleSphere, {color:'red', position:{z:-6}})
+    sphere.addComponent(SimpleSphere, {color:'red', position:{z:-5, x:2}})
+    sphere.addComponent(Grabable)
+
+    const sphere2 = world.createEntity()
+    sphere2.addComponent(SimpleSphere, {color:'blue', position:{z:-5, x:-2}})
     sphere.addComponent(Grabable)
     startWorldLoop(app,world)
 }
