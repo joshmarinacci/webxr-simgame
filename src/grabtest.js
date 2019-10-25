@@ -66,37 +66,34 @@ class SimpleSphereSystem extends System {
             con.controller.add(hand.obj)
         })
 
-        this.queries.hands.results.forEach(enta => {
-            const hand = enta.getComponent(Hand)
+        this.queries.hands.results.forEach(handEnt => {
+            const hand = handEnt.getComponent(Hand)
             const ca = new Vector3()
             hand.obj.localToWorld(ca)
-            this.queries.objs.results.forEach(entb => {
-                const sphere = entb.getComponent(SimpleSphere)
+            this.queries.grabable.results.forEach(grabbableEnt => {
+                const sphere = grabbableEnt.getComponent(SimpleSphere)
                 if(!sphere.obj) return
                 const cb = new Vector3()
                 sphere.obj.localToWorld(cb)
-                // if(enta !== ent) {
-                    const dist = ca.distanceTo(cb)
-                    if(dist === 0) return
-                    if(dist <= 2) {
-                        console.log("close")
-                        if(hand.grabbed !== entb ) {
-                            console.log("grab it",entb)
-                            hand.grabbed = entb
-                            let color = sphere.color
+                const dist = ca.distanceTo(cb)
+                if(dist === 0) return // works around a bug
+                if(dist <= 2) {
+                    if(hand.grabbed !== grabbableEnt ) {
+                        console.log("grab it",grabbableEnt)
+                        hand.grabbed = grabbableEnt
+                        let color = sphere.color
+                        setTimeout(()=>{
+                            if(handEnt.hasComponent(SimpleSphere)) {
+                                // console.log("triggering remove")
+                                handEnt.removeComponent(SimpleSphere)
+                            }
                             setTimeout(()=>{
-                                if(enta.hasComponent(SimpleSphere)) {
-                                    console.log("triggering remove")
-                                    enta.removeComponent(SimpleSphere)
-                                }
-                                setTimeout(()=>{
-                                    console.log('triggering an add')
-                                    enta.addComponent(SimpleSphere,{color:color})
-                                },0)
+                                // console.log('triggering an add')
+                                handEnt.addComponent(SimpleSphere,{color:color})
                             },0)
-                        }
+                        },0)
                     }
-                // }
+                }
             })
         })
     }
@@ -161,7 +158,7 @@ function setup() {
 
     const sphere2 = world.createEntity()
     sphere2.addComponent(SimpleSphere, {color:'blue', position:{z:-5, x:-2}})
-    sphere.addComponent(Grabable)
+    sphere2.addComponent(Grabable)
     startWorldLoop(app,world)
 }
 
