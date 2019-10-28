@@ -36,7 +36,6 @@ export class VRController {
 
 export class VRInputSystem extends System {
     init() {
-        this.started = false
     }
     execute() {
 
@@ -96,11 +95,14 @@ export class VRInputSystem extends System {
 
         const {hex,node} = this.findHexAtController(core,cont)
         if(hex) {
-            if(this.current) {
-                this.current.material.color.set(this.current.userData.regularColor)
+            const ent = node.userData.ent
+            if(cont.current && cont.current.hasComponent(Highlighted) && cont.current !== ent) {
+                cont.current.removeComponent(Highlighted)
             }
-            this.current = node
-            node.material.color.set('red')
+            if(!ent.hasComponent(Highlighted)) {
+                ent.addComponent(Highlighted)
+                cont.current = ent
+            }
         }
     }
 
