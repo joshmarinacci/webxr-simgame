@@ -10,7 +10,7 @@ import {Level, LevelsSystem} from './levelssystem.js'
 import {VRStats, VRStatsSystem} from './vrstats.js'
 import {setupLevels} from './levels.js'
 import {Instructions3D, Instructions3DSystem} from './Instructions3D.js'
-import {GrabbingSystem, Hand} from './grabbingsystem.js'
+import {Grabable, GrabbingSystem, Hand, SimpleSphere} from './grabbingsystem.js'
 
 
 let game
@@ -56,10 +56,10 @@ function setupGame() {
 
     world.createEntity()
         .addComponent(VRController,{vrid:0})
-        .addComponent(Hand)
+        .addComponent(Hand,{grabDistance:0.25})
     world.createEntity()
         .addComponent(VRController,{vrid:1})
-        .addComponent(Hand)
+        .addComponent(Hand,{grabDistance:0.25})
 
     game.addComponent(VRStats)
     game.addComponent(Instructions3D)
@@ -101,6 +101,24 @@ function setupGame() {
         }
     })
     buttons.push(cityButton)
+
+
+
+    const farmTool = world.createEntity()
+    farmTool.addComponent(SimpleSphere, {color:'brown', radius:0.25, position:{x:-2, y:1, z:-1}})
+    farmTool.addComponent(Grabable)
+
+    const treeTool = world.createEntity()
+    treeTool.addComponent(SimpleSphere, {color:'green', radius:0.25, position:{x:-1, y:1, z:-1}})
+    treeTool.addComponent(Grabable)
+
+    const chopTool = world.createEntity()
+    chopTool.addComponent(SimpleSphere, {color:'darkbrown', radius:0.25, position:{x:1, y:1, z:-1}})
+    chopTool.addComponent(Grabable)
+
+    const cityTool = world.createEntity()
+    cityTool.addComponent(SimpleSphere, {color:'gray', radius:0.25, position:{x:2, y:1, z:-1}})
+    cityTool.addComponent(Grabable)
 
     oneWorldTick(game,world)
 
