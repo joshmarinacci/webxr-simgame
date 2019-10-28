@@ -1,6 +1,6 @@
 import {Clock, Group, PerspectiveCamera, Scene, WebGLRenderer} from "../node_modules/three/build/three.module.js"
 import {System} from "../node_modules/ecsy/build/ecsy.module.js"
-import {WEBVR} from "../node_modules/three/examples/jsm/vr/WebVR.js"
+import {WEBVR} from "./WebVRButton.js"
 
 export class ThreeCore {
     constructor() {
@@ -24,6 +24,10 @@ export class ThreeCore {
     getCamera() {
         return this.camera
     }
+}
+
+export class InsideVR {
+
 }
 
 
@@ -59,7 +63,10 @@ export class ThreeSystem extends System {
             app.renderer.setSize( window.innerWidth, window.innerHeight );
         }, false );
         app.initialized = true
-        document.body.appendChild(WEBVR.createButton(app.renderer))
+        document.body.appendChild(WEBVR.createButton(app.renderer,{
+            onSessionStarted:() => ent.addComponent(InsideVR),
+            onSessionEnded:() =>  ent.removeComponent(InsideVR),
+        }))
     }
 
     render(ent) {

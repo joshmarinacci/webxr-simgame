@@ -1,6 +1,6 @@
 import {AmbientLight, Clock, Color, DirectionalLight} from "../node_modules/three/build/three.module.js"
-import {World} from "../node_modules/ecsy/build/ecsy.module.js"
-import {oneWorldTick, startWorldLoop, ThreeCore, ThreeSystem} from "./threesystem.js"
+import {World, System} from "../node_modules/ecsy/build/ecsy.module.js"
+import {InsideVR, oneWorldTick, startWorldLoop, ThreeCore, ThreeSystem} from "./threesystem.js"
 import {Button3D, Hex3dsystem, HexMapView, ScoreBoard} from './hex3dsystem.js'
 import {MouseInputDevice, MouseInputSystem} from './mousesystem.js'
 import {KeyboardInputSystem} from "./keyboardsystem.js"
@@ -25,6 +25,53 @@ function setupLights(core) {
     core.scene.add(ambient)
 }
 
+class DesktopOnly {}
+class VROnly {}
+class VRSwitchingSystem extends System {
+    execute() {
+        this.queries.vr.added.forEach(()=>{
+            console.log("added")
+            this.queries.desktoponly.results.forEach(ent => {
+                if(ent.hasComponent(Button3D)) ent.getComponent(Button3D).obj.visible = false
+            })
+            this.queries.vronly.results.forEach(ent => {
+                console.log("Have to show it")
+            })
+        })
+        this.queries.vr.removed.forEach(()=>{
+            this.queries.desktoponly.results.forEach(ent => {
+                if(ent.hasComponent(Button3D)) ent.getComponent(Button3D).obj.visible = true
+            })
+            this.queries.vronly.results.forEach(ent => {
+                console.log("Have to hide it")
+            })
+        })
+    }
+}
+VRSwitchingSystem.queries = {
+    vr: {
+        components:[InsideVR],
+        listen: {
+            added:true,
+            removed:true
+        }
+    },
+    desktoponly: {
+        components:[DesktopOnly],
+        listen: {
+            added:true,
+            removed:true
+        }
+    },
+    vronly: {
+        components:[VROnly],
+        listen: {
+            added:true,
+            removed:true
+        }
+    },
+
+}
 
 function setupGame() {
     let world = new World();
@@ -38,6 +85,7 @@ function setupGame() {
     world.registerSystem(LevelsSystem)
     world.registerSystem(VRStatsSystem)
     world.registerSystem(Instructions3DSystem)
+    world.registerSystem(VRSwitchingSystem)
 
     game = world.createEntity()
     game.addComponent(ThreeCore)
@@ -76,6 +124,7 @@ function setupGame() {
         }
     })
     buttons.push(farmButton)
+    farmButton.addComponent(DesktopOnly)
     const treeButton = world.createEntity().addComponent(Button3D,{text:'tree',
         onClick:()=>{
             buttons.forEach(ent => ent.getMutableComponent(Button3D).selected = false)
@@ -84,6 +133,7 @@ function setupGame() {
         }
     })
     buttons.push(treeButton)
+    treeButton.addComponent(DesktopOnly)
 
     const chopButton = world.createEntity().addComponent(Button3D,{text:'chop',
         onClick:()=>{
@@ -93,6 +143,7 @@ function setupGame() {
         }
     })
     buttons.push(chopButton)
+    chopButton.addComponent(DesktopOnly)
     const cityButton = world.createEntity().addComponent(Button3D,{text:'city',
         onClick:()=>{
             buttons.forEach(ent => ent.getMutableComponent(Button3D).selected = false)
@@ -101,6 +152,7 @@ function setupGame() {
         }
     })
     buttons.push(cityButton)
+    cityButton.addComponent(DesktopOnly)
 
 
 
