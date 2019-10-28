@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<svg fill-opacity="1" xmlns:xlink="http://www.w3.org/1999/xlink" color-rendering="auto" color-interpolation="auto" text-rendering="auto" stroke="black" stroke-linecap="square" stroke-miterlimit="10" shape-rendering="auto" stroke-opacity="1" fill="black" stroke-dasharray="none" font-weight="normal" stroke-width="1" xmlns="http://www.w3.org/2000/svg" font-family="'Dialog'" font-style="normal" stroke-linejoin="miter" font-size="12" stroke-dashoffset="0" image-rendering="auto">
+  <!--Unicode Character 'HAMMER' (U+1F528)-->
+  <defs id="genericDefs"/>
+  <g>
+    <g>
+      <path d="M253.8281 360.5625 L223.875 391.3594 L77.4844 238.7812 L101.25 214.4531 L253.8281 360.5625 ZM154.8281 193.2188 Q146.3906 189.9844 136.8281 189.9844 Q125.0156 189.9844 118.2656 195.1875 Q116.1562 196.875 99.7031 213.0469 Q99.7031 213.0469 61.0312 251.7188 L66.2344 256.7812 L46.6875 276.8906 L13.3594 243.9844 L32.4844 223.875 Q35.2969 225.5625 38.9531 229.5 Q51.0469 218.1094 72.7031 195.4688 Q83.6719 184.0781 85.5 182.25 Q93.9375 173.9531 99.4219 170.7188 Q106.4531 166.6406 114.6094 166.6406 Q125.7188 166.6406 137.5312 175.2188 Q147.7969 182.6719 154.8281 193.2188 ZM76.0781 189.7031 L52.3125 214.4531 Q50.625 212.9062 47.6719 209.5312 L71.5781 185.2031 L76.0781 189.7031 Z" stroke="none"/>
+    </g>
+  </g>
+</svg>

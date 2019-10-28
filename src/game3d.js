@@ -1,6 +1,6 @@
-import {AmbientLight, Clock, Color, DirectionalLight} from "../node_modules/three/build/three.module.js"
-import {World, System} from "../node_modules/ecsy/build/ecsy.module.js"
-import {InsideVR, oneWorldTick, startWorldLoop, ThreeCore, ThreeSystem} from "./threesystem.js"
+import {AmbientLight, Color, DirectionalLight} from "../node_modules/three/build/three.module.js"
+import {System, World} from "../node_modules/ecsy/build/ecsy.module.js"
+import {InsideVR, oneWorldTick, startWorldLoop, ThreeCore, ThreeNode, ThreeSystem} from "./threesystem.js"
 import {Button3D, Hex3dsystem, HexMapView, ScoreBoard} from './hex3dsystem.js'
 import {MouseInputDevice, MouseInputSystem} from './mousesystem.js'
 import {KeyboardInputSystem} from "./keyboardsystem.js"
@@ -11,6 +11,7 @@ import {VRStats, VRStatsSystem} from './vrstats.js'
 import {setupLevels} from './levels.js'
 import {Instructions3D, Instructions3DSystem} from './Instructions3D.js'
 import {Grabable, GrabbingSystem, Hand, SimpleSphere} from './grabbingsystem.js'
+import {SVGExtrudedObj, SVGSystem} from './SVGSystem.js'
 
 
 let game
@@ -86,6 +87,7 @@ function setupGame() {
     world.registerSystem(VRStatsSystem)
     world.registerSystem(Instructions3DSystem)
     world.registerSystem(VRSwitchingSystem)
+    world.registerSystem(SVGSystem)
 
     game = world.createEntity()
     game.addComponent(ThreeCore)
@@ -181,11 +183,13 @@ function setupGame() {
     chopButton.getComponent(Button3D).obj.position.x = 1
     cityButton.getComponent(Button3D).obj.position.x = +2.5
 
-
     setupLights(core)
 
-    startWorldLoop(game,world)
+    const svgtest = world.createEntity()
+    svgtest.addComponent(ThreeNode, {position:{z:-2, y:1}})
+    svgtest.addComponent(SVGExtrudedObj,{scale:0.002, src:'src/hammer.svg'})
 
+    startWorldLoop(game,world)
 }
 
 setupGame()

@@ -26,6 +26,12 @@ export class ThreeCore {
     }
 }
 
+export class ThreeNode {
+    constructor() {
+        this.object = null
+    }
+}
+
 export class InsideVR {
 
 }
@@ -34,6 +40,17 @@ export class InsideVR {
 export class ThreeSystem extends System {
     execute(delta,time) {
         this.queries.three.results.forEach(ent => this.setupThree(ent))
+        this.queries.nodes.added.forEach(ent => {
+            const node = ent.getMutableComponent(ThreeNode)
+            node.object = new Group()
+            if(node.object) {
+                if (node.position && node.position.x) node.object.position.x = node.position.x
+                if (node.position && node.position.y) node.object.position.y = node.position.y
+                if (node.position && node.position.z) node.object.position.z = node.position.z
+            }
+            const core = this.queries.three.results[0].getComponent(ThreeCore)
+            core.getStage().add(node.object)
+        })
     }
     setupThree(ent) {
         const app = ent.getMutableComponent(ThreeCore)
@@ -77,6 +94,13 @@ export class ThreeSystem extends System {
 ThreeSystem.queries = {
     three: {
         components:[ThreeCore]
+    },
+    nodes: {
+        components: [ThreeNode],
+        listen: {
+            added:true,
+            removed:true
+        }
     }
 }
 
