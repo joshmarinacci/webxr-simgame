@@ -19,17 +19,6 @@ class SimpleSphere {
         this.position = new Vector3()
     }
 }
-class Hand {
-    constructor() {
-        this.obj = null
-        this.grabbed = null
-        this.color = 'yellow'
-        this.canGrab = true
-    }
-}
-class Grabable {
-
-}
 
 class SimpleSphereSystem extends System {
     execute() {
@@ -62,10 +51,10 @@ class SimpleSphereSystem extends System {
                 new BoxBufferGeometry(0.5,0.5,2.5).translate(0,0,1),
                 new MeshLambertMaterial({color:hand.color})
             )
-            const con = ent.getMutableComponent(VRController)
-            con.controller.add(hand.obj)
+            ent.getMutableComponent(VRController).controller.add(hand.obj)
         })
 
+        //code to detect grabs for each controller
         this.queries.hands.results.forEach(handEnt => {
             const hand = handEnt.getComponent(Hand)
             const ca = new Vector3()

@@ -1,15 +1,16 @@
 import {AmbientLight, Clock, Color, DirectionalLight} from "../node_modules/three/build/three.module.js"
 import {World} from "../node_modules/ecsy/build/ecsy.module.js"
-import {ThreeCore, ThreeSystem} from "./threesystem.js"
+import {oneWorldTick, startWorldLoop, ThreeCore, ThreeSystem} from "./threesystem.js"
 import {Button3D, Hex3dsystem, HexMapView, ScoreBoard} from './hex3dsystem.js'
 import {MouseInputDevice, MouseInputSystem} from './mousesystem.js'
 import {KeyboardInputSystem} from "./keyboardsystem.js"
-import {VRInputSystem} from './vrinputsystem.js'
+import {VRController, VRInputSystem} from './vrinputsystem.js'
 import {GameState, GameStateEnums, HexMapComp, InputModes, LogicSystem} from "./logic2.js"
 import {Level, LevelsSystem} from './levelssystem.js'
 import {VRStats, VRStatsSystem} from './vrstats.js'
 import {setupLevels} from './levels.js'
 import {Instructions3D, Instructions3DSystem} from './Instructions3D.js'
+import {GrabbingSystem, Hand} from './grabbingsystem.js'
 
 
 let game
@@ -33,6 +34,7 @@ function setupGame() {
     world.registerSystem(MouseInputSystem)
     world.registerSystem(KeyboardInputSystem)
     world.registerSystem(VRInputSystem)
+    world.registerSystem(GrabbingSystem)
     world.registerSystem(LevelsSystem)
     world.registerSystem(VRStatsSystem)
     world.registerSystem(Instructions3DSystem)
@@ -48,8 +50,16 @@ function setupGame() {
     game.addComponent(Level,state.levels[state.levelIndex])
 
     //manually do one tick
+    oneWorldTick(game,world)
+
     const core = game.getMutableComponent(ThreeCore)
-    world.execute(0.1,0)
+
+    world.createEntity()
+        .addComponent(VRController,{vrid:0})
+        .addComponent(Hand)
+    world.createEntity()
+        .addComponent(VRController,{vrid:1})
+        .addComponent(Hand)
 
     game.addComponent(VRStats)
     game.addComponent(Instructions3D)
@@ -92,26 +102,17 @@ function setupGame() {
     })
     buttons.push(cityButton)
 
-    setTimeout(()=>{
+    oneWorldTick(game,world)
+
         farmButton.getComponent(Button3D).obj.position.x = -2.5
         treeButton.getComponent(Button3D).obj.position.x = -1
         chopButton.getComponent(Button3D).obj.position.x = 1
         cityButton.getComponent(Button3D).obj.position.x = +2.5
 
-    },100)
-
 
     setupLights(core)
 
-    // setupScore(core,world)
-
-    const clock = new Clock();
-    core.renderer.setAnimationLoop(()=> {
-        const delta = clock.getDelta();
-        const elapsedTime = clock.elapsedTime;
-        world.execute(delta, elapsedTime)
-        core.renderer.render(core.scene, core.camera)
-    })
+    startWorldLoop(game,world)
 
 }
 
