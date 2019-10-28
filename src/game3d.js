@@ -157,29 +157,22 @@ function setupGame() {
 
 
     const ss = 0.10
+    const y = 1.0
     const farmTool = world.createEntity()
-    farmTool.addComponent(SimpleSphere, {color:'brown', radius:ss, position:{x:-0.5, y:0.5, z:-0}})
-    farmTool.addComponent(Grabable, {onGrab:(ent)=>{
-            ent.getMutableComponent(VRController).inputMode = InputModes.PLANT_FARM
-        }})
+    farmTool.addComponent(SimpleSphere, {color:'brown', radius:ss, position:{x:-0.5, y:y, z:-0}})
+    farmTool.addComponent(Grabable, {onGrab:(ent)=> ent.getMutableComponent(VRController).inputMode = InputModes.PLANT_FARM})
 
     const treeTool = world.createEntity()
-    treeTool.addComponent(SimpleSphere, {color:'green', radius:ss, position:{x:-0.25, y:0.5, z:-0.5}})
-    treeTool.addComponent(Grabable, {onGrab:(ent)=>{
-            ent.getMutableComponent(VRController).inputMode = InputModes.PLANT_FOREST
-        }})
+    treeTool.addComponent(SimpleSphere, {color:'green', radius:ss, position:{x:-0.25, y:y, z:-0.5}})
+    treeTool.addComponent(Grabable, {onGrab:(ent)=> ent.getMutableComponent(VRController).inputMode = InputModes.PLANT_FOREST})
 
     const chopTool = world.createEntity()
-    chopTool.addComponent(SimpleSphere, {color:'darkbrown', radius:ss, position:{x:0.25, y:0.5, z:-0.5}})
-    chopTool.addComponent(Grabable, {onGrab:(ent)=>{
-            ent.getMutableComponent(VRController).inputMode = InputModes.CHOP_WOOD
-        }})
+    chopTool.addComponent(SimpleSphere, {color:'darkbrown', radius:ss, position:{x:0.25, y:y, z:-0.5}})
+    chopTool.addComponent(Grabable, {onGrab:(ent)=> ent.getMutableComponent(VRController).inputMode = InputModes.CHOP_WOOD})
 
     const cityTool = world.createEntity()
-    cityTool.addComponent(SimpleSphere, {color:'gray', radius:ss, position:{x:0.5, y:0.5, z:-0}})
-    cityTool.addComponent(Grabable, {onGrab:(ent)=>{
-            ent.getMutableComponent(VRController).inputMode = InputModes.BUILD_CITY
-        }})
+    cityTool.addComponent(SimpleSphere, {color:'gray', radius:ss, position:{x:0.5, y:y, z:-0}})
+    cityTool.addComponent(Grabable, {onGrab:(ent)=>  ent.getMutableComponent(VRController).inputMode = InputModes.BUILD_CITY})
 
     oneWorldTick(game,world)
 
