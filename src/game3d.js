@@ -185,9 +185,25 @@ function setupGame() {
 
     setupLights(core)
 
-    const svgtest = world.createEntity()
-    svgtest.addComponent(ThreeNode, {position:{z:-2, y:1}})
-    svgtest.addComponent(SVGExtrudedObj,{scale:0.002, src:'src/hammer.svg'})
+    //make farm
+    const hoe = world.createEntity()
+    hoe.addComponent(ThreeNode, {position:{x:-2, z:-2, y:1}})
+    hoe.addComponent(SVGExtrudedObj,{scale:0.002, src:'src/hoe-svgrepo-com.svg', ccw:false})
+
+    //chop wood
+    const axe = world.createEntity()
+    axe.addComponent(ThreeNode, {position:{x:-1,z:-2, y:1}})
+    axe.addComponent(SVGExtrudedObj,{scale:0.002, src:'src/axe-svgrepo-com.svg', ccw:false})
+
+    //plant tree
+    const gloves = world.createEntity()
+    gloves.addComponent(ThreeNode, {position:{x:1,z:-2, y:1}})
+    gloves.addComponent(SVGExtrudedObj,{scale:0.002, src:'src/glove-svgrepo-com.svg', ccw:false})
+
+    //build city
+    const shovel = world.createEntity()
+    shovel.addComponent(ThreeNode, {position:{z:-2, y:1}})
+    shovel.addComponent(SVGExtrudedObj,{scale:0.002, src:'src/shovel-svgrepo-com.svg', ccw:true})
 
     startWorldLoop(game,world)
 }

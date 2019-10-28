@@ -17,6 +17,7 @@ export class SVGExtrudedObj {
     constructor() {
         this.src = null
         this.scale = 1.0
+        this.ccw = false
     }
 }
 
@@ -34,21 +35,22 @@ export class SVGSystem extends System {
             const loader = new SVGLoader()
             loader.load(svg.src,(data)=>{
                 console.log("loaded some data",data)
-                const path = data.paths[0]
-                const shapes = path.toShapes(true)
-                const mat = new MeshLambertMaterial({color:'red'})
                 const group = new Group()
-                shapes.forEach(sh => {
-                    console.log(sh)
-                    const geo = new ExtrudeBufferGeometry(sh,{
-                        steps:2,
-                        depth:16,
-                        bevelEnabled: true,
+                data.paths.forEach(path => {
+                    const shapes = path.toShapes(svg.ccw)
+                    const mat = new MeshLambertMaterial({color:'red'})
+                    shapes.forEach(sh => {
+                        console.log(sh)
+                        const geo = new ExtrudeBufferGeometry(sh,{
+                            steps:2,
+                            depth:16,
+                            bevelEnabled: true,
+                        })
+                        const s = svg.scale
+                        geo.scale(s,s,s)
+                        const mesh = new Mesh(geo,mat)
+                        group.add(mesh)
                     })
-                    const s = svg.scale
-                    geo.scale(s,s,s)
-                    const mesh = new Mesh(geo,mat)
-                    group.add(mesh)
                 })
                 node.object.add(group)
                 node.object.rotation.y = 0
