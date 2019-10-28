@@ -40,7 +40,7 @@ export class GrabbingSystem extends System {
         this.queries.hands.added.forEach(ent => {
             const hand = ent.getMutableComponent(Hand)
             hand.obj = new Mesh(
-                new BoxBufferGeometry(0.1,0.1,0.4).translate(0,0,0),
+                new BoxBufferGeometry(0.1,0.1,0.4).translate(0,0,-0.10),
                 new MeshLambertMaterial({color:hand.color})
             )
             ent.getMutableComponent(VRController).controller.add(hand.obj)
@@ -81,7 +81,6 @@ export class GrabbingSystem extends System {
                 if(dist === 0) return // works around a bug
                 if(dist <= hand.grabDistance) {
                     if(hand.grabbed !== grabbableEnt ) {
-                        console.log("grab it",grabbableEnt)
                         hand.grabbed = grabbableEnt
                         let color = sphere.color
                         setTimeout(()=>{
@@ -91,7 +90,7 @@ export class GrabbingSystem extends System {
                             }
                             setTimeout(()=>{
                                 // console.log('triggering an add')
-                                handEnt.addComponent(SimpleSphere,{color:color, radius:0.10})
+                                handEnt.addComponent(SimpleSphere,{color:color, radius:0.10, position:{z:-0.5}})
                                 const grabber = grabbableEnt.getComponent(Grabable)
                                 if(grabber.onGrab) grabber.onGrab(handEnt)
                             },0)
