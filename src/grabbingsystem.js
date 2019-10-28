@@ -17,11 +17,13 @@ export class Hand {
         this.obj = null
         this.grabbed = null
         this.color = 'yellow'
-        this.canGrab = true
         this.grabDistance = 1
     }
 }
 export class Grabable {
+    constructor() {
+        this.onGrab = null
+    }
 }
 
 export class SimpleSphere {
@@ -87,6 +89,8 @@ export class GrabbingSystem extends System {
                             setTimeout(()=>{
                                 // console.log('triggering an add')
                                 handEnt.addComponent(SimpleSphere,{color:color})
+                                const grabber = grabbableEnt.getComponent(Grabable)
+                                if(grabber.onGrab) grabber.onGrab()
                             },0)
                         },0)
                     }

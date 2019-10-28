@@ -106,26 +106,34 @@ function setupGame() {
 
     const farmTool = world.createEntity()
     farmTool.addComponent(SimpleSphere, {color:'brown', radius:0.25, position:{x:-2, y:1, z:-1}})
-    farmTool.addComponent(Grabable)
+    farmTool.addComponent(Grabable, {onGrab:()=>{
+            game.getMutableComponent(GameState).inputMode = InputModes.PLANT_FARM
+        }})
 
     const treeTool = world.createEntity()
     treeTool.addComponent(SimpleSphere, {color:'green', radius:0.25, position:{x:-1, y:1, z:-1}})
-    treeTool.addComponent(Grabable)
+    treeTool.addComponent(Grabable, {onGrab:()=>{
+            game.getMutableComponent(GameState).inputMode = InputModes.PLANT_FOREST
+        }})
 
     const chopTool = world.createEntity()
     chopTool.addComponent(SimpleSphere, {color:'darkbrown', radius:0.25, position:{x:1, y:1, z:-1}})
-    chopTool.addComponent(Grabable)
+    chopTool.addComponent(Grabable, {onGrab:()=>{
+            game.getMutableComponent(GameState).inputMode = InputModes.CHOP_WOOD
+        }})
 
     const cityTool = world.createEntity()
     cityTool.addComponent(SimpleSphere, {color:'gray', radius:0.25, position:{x:2, y:1, z:-1}})
-    cityTool.addComponent(Grabable)
+    cityTool.addComponent(Grabable, {onGrab:()=>{
+            game.getMutableComponent(GameState).inputMode = InputModes.BUILD_CITY
+        }})
 
     oneWorldTick(game,world)
 
-        farmButton.getComponent(Button3D).obj.position.x = -2.5
-        treeButton.getComponent(Button3D).obj.position.x = -1
-        chopButton.getComponent(Button3D).obj.position.x = 1
-        cityButton.getComponent(Button3D).obj.position.x = +2.5
+    farmButton.getComponent(Button3D).obj.position.x = -2.5
+    treeButton.getComponent(Button3D).obj.position.x = -1
+    chopButton.getComponent(Button3D).obj.position.x = 1
+    cityButton.getComponent(Button3D).obj.position.x = +2.5
 
 
     setupLights(core)
