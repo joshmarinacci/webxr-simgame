@@ -28,19 +28,16 @@ export class SVGSystem extends System {
             node.object.rotation.y+=0.01
         })
         this.queries.objs.added.forEach(ent => {
-            console.log("adding an SVG node")
             const svg = ent.getComponent(SVGExtrudedObj)
             const node = ent.getMutableComponent(ThreeNode)
-            console.log("adding an SVG Node",svg)
             const loader = new SVGLoader()
             loader.load(svg.src,(data)=>{
-                console.log("loaded some data",data)
                 const group = new Group()
                 data.paths.forEach(path => {
                     const shapes = path.toShapes(svg.ccw)
-                    const mat = new MeshLambertMaterial({color:'red'})
+                    const mat = new MeshLambertMaterial({color:node.color})
+                    console.log("using the color",node.color)
                     shapes.forEach(sh => {
-                        console.log(sh)
                         const geo = new ExtrudeBufferGeometry(sh,{
                             steps:2,
                             depth:16,

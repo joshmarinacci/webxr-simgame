@@ -29,6 +29,7 @@ export class ThreeCore {
 export class ThreeNode {
     constructor() {
         this.object = null
+        this.color = 'red'
     }
 }
 

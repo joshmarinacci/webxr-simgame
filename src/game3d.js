@@ -31,12 +31,10 @@ class VROnly {}
 class VRSwitchingSystem extends System {
     execute() {
         this.queries.vr.added.forEach(()=>{
-            console.log("added")
             this.queries.desktoponly.results.forEach(ent => {
                 if(ent.hasComponent(Button3D)) ent.getComponent(Button3D).obj.visible = false
             })
             this.queries.vronly.results.forEach(ent => {
-                console.log("Have to show it")
             })
         })
         this.queries.vr.removed.forEach(()=>{
@@ -44,7 +42,6 @@ class VRSwitchingSystem extends System {
                 if(ent.hasComponent(Button3D)) ent.getComponent(Button3D).obj.visible = true
             })
             this.queries.vronly.results.forEach(ent => {
-                console.log("Have to hide it")
             })
         })
     }
@@ -169,7 +166,7 @@ function setupGame() {
     treeTool.addComponent(Grabable, {onGrab:(ent)=> ent.getMutableComponent(VRController).inputMode = InputModes.PLANT_FOREST})
 
     const chopTool = world.createEntity()
-    chopTool.addComponent(SimpleSphere, {color:'darkbrown', radius:ss, position:{x:0.25, y:y, z:-0.5}})
+    chopTool.addComponent(SimpleSphere, {color:'tan', radius:ss, position:{x:0.25, y:y, z:-0.5}})
     chopTool.addComponent(Grabable, {onGrab:(ent)=> ent.getMutableComponent(VRController).inputMode = InputModes.CHOP_WOOD})
 
     const cityTool = world.createEntity()
@@ -187,22 +184,22 @@ function setupGame() {
 
     //make farm
     const hoe = world.createEntity()
-    hoe.addComponent(ThreeNode, {position:{x:-2, z:-2, y:1}})
+    hoe.addComponent(ThreeNode, {position:{x:-2, z:-2, y:1}, color:'brown'})
     hoe.addComponent(SVGExtrudedObj,{scale:0.002, src:'src/hoe-svgrepo-com.svg', ccw:false})
-
-    //chop wood
-    const axe = world.createEntity()
-    axe.addComponent(ThreeNode, {position:{x:-1,z:-2, y:1}})
-    axe.addComponent(SVGExtrudedObj,{scale:0.002, src:'src/axe-svgrepo-com.svg', ccw:false})
 
     //plant tree
     const gloves = world.createEntity()
-    gloves.addComponent(ThreeNode, {position:{x:1,z:-2, y:1}})
+    gloves.addComponent(ThreeNode, {position:{x:1,z:-2, y:1}, color:'green'})
     gloves.addComponent(SVGExtrudedObj,{scale:0.002, src:'src/glove-svgrepo-com.svg', ccw:false})
+
+    //chop wood
+    const axe = world.createEntity()
+    axe.addComponent(ThreeNode, {position:{x:-1,z:-2, y:1}, color:'tan'})
+    axe.addComponent(SVGExtrudedObj,{scale:0.002, src:'src/axe-svgrepo-com.svg', ccw:false})
 
     //build city
     const shovel = world.createEntity()
-    shovel.addComponent(ThreeNode, {position:{z:-2, y:1}})
+    shovel.addComponent(ThreeNode, {position:{z:-2, y:1}, color:'gray'})
     shovel.addComponent(SVGExtrudedObj,{scale:0.002, src:'src/shovel-svgrepo-com.svg', ccw:true})
 
     startWorldLoop(game,world)
