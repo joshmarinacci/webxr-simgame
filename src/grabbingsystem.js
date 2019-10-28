@@ -40,7 +40,7 @@ export class GrabbingSystem extends System {
         this.queries.hands.added.forEach(ent => {
             const hand = ent.getMutableComponent(Hand)
             hand.obj = new Mesh(
-                new BoxBufferGeometry(0.5,0.5,2.5).translate(0,0,1),
+                new BoxBufferGeometry(0.1,0.1,0.4).translate(0,0,0),
                 new MeshLambertMaterial({color:hand.color})
             )
             ent.getMutableComponent(VRController).controller.add(hand.obj)
@@ -60,7 +60,10 @@ export class GrabbingSystem extends System {
                 console.log('adding a sphere')
                 ent.getComponent(VRController).controller.add(sphere.obj)
             } else {
-                core.getStage().add(sphere.obj)
+                // core.getStage().add(sphere.obj)
+                console.log('adding a sphere')
+                core.scene.add(sphere.obj)
+                // core.getCamera().add(sphere.obj)
             }
         })
 
@@ -88,7 +91,7 @@ export class GrabbingSystem extends System {
                             }
                             setTimeout(()=>{
                                 // console.log('triggering an add')
-                                handEnt.addComponent(SimpleSphere,{color:color})
+                                handEnt.addComponent(SimpleSphere,{color:color, radius:0.10})
                                 const grabber = grabbableEnt.getComponent(Grabable)
                                 if(grabber.onGrab) grabber.onGrab()
                             },0)

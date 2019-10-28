@@ -21,6 +21,9 @@ export class ThreeCore {
     getStage() {
         return this.stage
     }
+    getCamera() {
+        return this.camera
+    }
 }
 
 
