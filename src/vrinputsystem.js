@@ -29,8 +29,8 @@ export class VRController {
     constructor() {
         this.raycaster = new Raycaster()
         this.vrid = -1
-        this.prevPressed = false
         this.pressed = false
+        this.inputMode = InputModes.NONE
     }
 }
 
@@ -140,15 +140,15 @@ export class VRInputSystem extends System {
             const ent = data.ent
             if(ent.hasComponent(DirtTile)) {
                 console.log("checking input",state.inputMode)
-                if(state.inputMode === InputModes.PLANT_FOREST)
+                if(cont.inputMode === InputModes.PLANT_FOREST)
                     ent.addComponent(CommandComp, { type: COMMANDS.PLANT_FOREST, hex: hex, data: data })
-                if(state.inputMode === InputModes.PLANT_FARM)
+                if(cont.inputMode === InputModes.PLANT_FARM)
                     ent.addComponent(CommandComp, { type: COMMANDS.PLANT_FARM, hex: hex, data: data })
             }
-            if(state.inputMode === InputModes.CHOP_WOOD && ent.hasComponent(ForestTile)) {
+            if(cont.inputMode === InputModes.CHOP_WOOD && ent.hasComponent(ForestTile)) {
                 ent.addComponent(CommandComp, { type: COMMANDS.CHOP_WOOD, hex: hex, data: data })
             }
-            if(state.inputMode === InputModes.BUILD_CITY && ent.hasComponent(DirtTile)) {
+            if(cont.inputMode === InputModes.BUILD_CITY && ent.hasComponent(DirtTile)) {
                 ent.addComponent(CommandComp, { type: COMMANDS.BUILD_CITY, hex: hex, data: data })
             }
         }

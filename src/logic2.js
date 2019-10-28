@@ -74,7 +74,6 @@ export class GameState {
         this.wood = 0
         this.mode = GameStateEnums.NONE
         this.levels = []
-        this.inputMode = InputModes.NONE
     }
     isMode(val) {
         return this.mode === val

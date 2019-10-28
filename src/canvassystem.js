@@ -11,7 +11,7 @@ import {
     ForestTile,
     GameState,
     GameStateEnums,
-    HexMapComp
+    HexMapComp, InputModes
 } from './logic2.js'
 import {Level} from './levelssystem.js'
 
@@ -39,6 +39,7 @@ export class MouseCanvasInput {
     constructor() {
         this.clicked = false
         this.position = new Point(0,0)
+        this.inputMode = InputModes.NONE
     }
     isClicked() {
         return this.clicked
@@ -49,7 +50,6 @@ export class MouseCanvasInput {
 }
 export class CanvasSystem extends System {
     init() {
-        this.mode = 'nothing'
     }
     execute() {
         this.queries.maps.added.forEach(ent => {
@@ -104,29 +104,30 @@ export class CanvasSystem extends System {
                 if(this.hoverComp && this.hoverComp !== data.ent) {
                     this.hoverComp.removeComponent(TileOverlay)
                 }
+                const mouse = this.queries.inputs.results[0].getComponent(MouseCanvasInput)
 
-                if(this.mode === COMMANDS.PLANT_FOREST) {
+                if(mouse.inputMode === COMMANDS.PLANT_FOREST) {
                     if (data.ent.hasComponent(DirtTile)) {
                         data.ent.addComponent(TileOverlay, {action: COMMANDS.PLANT_FOREST})
                     } else {
                         data.ent.addComponent(TileOverlay, {action: COMMANDS.INVALID})
                     }
                 }
-                if(this.mode === COMMANDS.CHOP_WOOD) {
+                if(mouse.inputMode === COMMANDS.CHOP_WOOD) {
                     if (data.ent.hasComponent(ForestTile)) {
                         data.ent.addComponent(TileOverlay, {action: COMMANDS.CHOP_WOOD})
                     } else {
                         data.ent.addComponent(TileOverlay, {action: COMMANDS.INVALID})
                     }
                 }
-                if(this.mode === COMMANDS.PLANT_FARM) {
+                if(mouse.inputMode === COMMANDS.PLANT_FARM) {
                     if (data.ent.hasComponent(DirtTile)) {
                         data.ent.addComponent(TileOverlay, {action: COMMANDS.PLANT_FARM})
                     } else {
                         data.ent.addComponent(TileOverlay, {action: COMMANDS.INVALID})
                     }
                 }
-                if(this.mode === COMMANDS.BUILD_CITY) {
+                if(mouse.inputMode === COMMANDS.BUILD_CITY) {
                     if (data.ent.hasComponent(DirtTile)) {
                         data.ent.addComponent(TileOverlay, {action: COMMANDS.BUILD_CITY})
                     } else {
@@ -145,16 +146,17 @@ export class CanvasSystem extends System {
             const {hex, data} = mouseToHex(e)
             if(!data) return
             const hexEnt = data.ent
-            if(this.mode === COMMANDS.PLANT_FOREST && hexEnt.hasComponent(DirtTile)) {
+            const mouse = this.queries.inputs.results[0].getComponent(MouseCanvasInput)
+            if(mouse.inputMode === COMMANDS.PLANT_FOREST && hexEnt.hasComponent(DirtTile)) {
                 hexEnt.addComponent(CommandComp, { type: COMMANDS.PLANT_FOREST, hex: hex, data: data })
             }
-            if(this.mode === COMMANDS.CHOP_WOOD && hexEnt.hasComponent(ForestTile)) {
+            if(mouse.inputMode === COMMANDS.CHOP_WOOD && hexEnt.hasComponent(ForestTile)) {
                 hexEnt.addComponent(CommandComp, { type: COMMANDS.CHOP_WOOD, hex: hex, data: data })
             }
-            if(this.mode === COMMANDS.PLANT_FARM && hexEnt.hasComponent(DirtTile)) {
+            if(mouse.inputMode === COMMANDS.PLANT_FARM && hexEnt.hasComponent(DirtTile)) {
                 hexEnt.addComponent(CommandComp, { type: COMMANDS.PLANT_FARM, hex: hex, data: data })
             }
-            if(this.mode === COMMANDS.BUILD_CITY && hexEnt.hasComponent(DirtTile)) {
+            if(mouse.inputMode === COMMANDS.BUILD_CITY && hexEnt.hasComponent(DirtTile)) {
                 hexEnt.addComponent(CommandComp, { type: COMMANDS.BUILD_CITY, hex: hex, data: data })
             }
         })
@@ -166,7 +168,9 @@ export class CanvasSystem extends System {
             $(selector).addEventListener('click',()=>{
                 $$("button").forEach(btn => btn.classList.remove('selected'))
                 $(selector).classList.add("selected")
-                self.mode = mode
+                self.queries.inputs.results.forEach(ent => {
+                    ent.getMutableComponent(MouseCanvasInput).inputMode = mode
+                })
             })
         }
 

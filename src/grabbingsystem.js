@@ -93,7 +93,7 @@ export class GrabbingSystem extends System {
                                 // console.log('triggering an add')
                                 handEnt.addComponent(SimpleSphere,{color:color, radius:0.10})
                                 const grabber = grabbableEnt.getComponent(Grabable)
-                                if(grabber.onGrab) grabber.onGrab()
+                                if(grabber.onGrab) grabber.onGrab(handEnt)
                             },0)
                         },0)
                     }

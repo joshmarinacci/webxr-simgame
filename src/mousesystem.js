@@ -18,6 +18,7 @@ export class MouseInputDevice {
         this.raycaster = new Raycaster()
         this.mouse = new Vector2()
         this.current = null
+        this.inputMode = InputModes.NONE
     }
 }
 
@@ -86,6 +87,7 @@ export class MouseInputSystem extends System {
             }
         })
         core.getCanvas().addEventListener('mousedown',(e)=>{
+            const mouse = this.queries.devices.results[0].getComponent(MouseInputDevice)
             const state = this.queries.state.results[0].getMutableComponent(GameState)
             if(state.isMode(GameStateEnums.SHOW_INSTRUCTIONS)) return state.toMode(GameStateEnums.PLAY)
             if(state.isMode(GameStateEnums.SHOW_WIN)) return state.toMode(GameStateEnums.NEXT_LEVEL)
@@ -105,15 +107,15 @@ export class MouseInputSystem extends System {
             const data = mapView.map.get(it2.object.userData.hex)
             const ent = data.ent
             if(ent.hasComponent(DirtTile)) {
-                if(state.inputMode === InputModes.PLANT_FOREST)
+                if(mouse.inputMode === InputModes.PLANT_FOREST)
                     ent.addComponent(CommandComp, { type: COMMANDS.PLANT_FOREST, hex: hex, data: data })
-                if(state.inputMode === InputModes.PLANT_FARM)
+                if(mouse.inputMode === InputModes.PLANT_FARM)
                     ent.addComponent(CommandComp, { type: COMMANDS.PLANT_FARM, hex: hex, data: data })
             }
-            if(state.inputMode === InputModes.CHOP_WOOD && ent.hasComponent(ForestTile)) {
+            if(mouse.inputMode === InputModes.CHOP_WOOD && ent.hasComponent(ForestTile)) {
                 ent.addComponent(CommandComp, { type: COMMANDS.CHOP_WOOD, hex: hex, data: data })
             }
-            if(state.inputMode === InputModes.BUILD_CITY && ent.hasComponent(DirtTile)) {
+            if(mouse.inputMode === InputModes.BUILD_CITY && ent.hasComponent(DirtTile)) {
                 ent.addComponent(CommandComp, { type: COMMANDS.BUILD_CITY, hex: hex, data: data })
             }
         })

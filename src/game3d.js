@@ -72,7 +72,7 @@ function setupGame() {
         onClick:()=>{
             buttons.forEach(ent => ent.getMutableComponent(Button3D).selected = false)
             farmButton.getMutableComponent(Button3D).selected = true
-            game.getMutableComponent(GameState).inputMode = InputModes.PLANT_FARM
+            game.getMutableComponent(MouseInputDevice).inputMode = InputModes.PLANT_FARM
         }
     })
     buttons.push(farmButton)
@@ -80,7 +80,7 @@ function setupGame() {
         onClick:()=>{
             buttons.forEach(ent => ent.getMutableComponent(Button3D).selected = false)
             treeButton.getMutableComponent(Button3D).selected = true
-            game.getMutableComponent(GameState).inputMode = InputModes.PLANT_FOREST
+            game.getMutableComponent(MouseInputDevice).inputMode = InputModes.PLANT_FOREST
         }
     })
     buttons.push(treeButton)
@@ -89,7 +89,7 @@ function setupGame() {
         onClick:()=>{
             buttons.forEach(ent => ent.getMutableComponent(Button3D).selected = false)
             chopButton.getMutableComponent(Button3D).selected = true
-            game.getMutableComponent(GameState).inputMode = InputModes.CHOP_WOOD
+            game.getMutableComponent(MouseInputDevice).inputMode = InputModes.CHOP_WOOD
         }
     })
     buttons.push(chopButton)
@@ -97,7 +97,7 @@ function setupGame() {
         onClick:()=>{
             buttons.forEach(ent => ent.getMutableComponent(Button3D).selected = false)
             cityButton.getMutableComponent(Button3D).selected = true
-            game.getMutableComponent(GameState).inputMode = InputModes.BUILD_CITY
+            game.getMutableComponent(MouseInputDevice).inputMode = InputModes.BUILD_CITY
         }
     })
     buttons.push(cityButton)
@@ -107,26 +107,26 @@ function setupGame() {
     const ss = 0.10
     const farmTool = world.createEntity()
     farmTool.addComponent(SimpleSphere, {color:'brown', radius:ss, position:{x:-0.5, y:0.5, z:-0}})
-    farmTool.addComponent(Grabable, {onGrab:()=>{
-            game.getMutableComponent(GameState).inputMode = InputModes.PLANT_FARM
+    farmTool.addComponent(Grabable, {onGrab:(ent)=>{
+            ent.getMutableComponent(VRController).inputMode = InputModes.PLANT_FARM
         }})
 
     const treeTool = world.createEntity()
     treeTool.addComponent(SimpleSphere, {color:'green', radius:ss, position:{x:-0.25, y:0.5, z:-0.5}})
-    treeTool.addComponent(Grabable, {onGrab:()=>{
-            game.getMutableComponent(GameState).inputMode = InputModes.PLANT_FOREST
+    treeTool.addComponent(Grabable, {onGrab:(ent)=>{
+            ent.getMutableComponent(VRController).inputMode = InputModes.PLANT_FOREST
         }})
 
     const chopTool = world.createEntity()
     chopTool.addComponent(SimpleSphere, {color:'darkbrown', radius:ss, position:{x:0.25, y:0.5, z:-0.5}})
-    chopTool.addComponent(Grabable, {onGrab:()=>{
-            game.getMutableComponent(GameState).inputMode = InputModes.CHOP_WOOD
+    chopTool.addComponent(Grabable, {onGrab:(ent)=>{
+            ent.getMutableComponent(VRController).inputMode = InputModes.CHOP_WOOD
         }})
 
     const cityTool = world.createEntity()
     cityTool.addComponent(SimpleSphere, {color:'gray', radius:ss, position:{x:0.5, y:0.5, z:-0}})
-    cityTool.addComponent(Grabable, {onGrab:()=>{
-            game.getMutableComponent(GameState).inputMode = InputModes.BUILD_CITY
+    cityTool.addComponent(Grabable, {onGrab:(ent)=>{
+            ent.getMutableComponent(VRController).inputMode = InputModes.BUILD_CITY
         }})
 
     oneWorldTick(game,world)
