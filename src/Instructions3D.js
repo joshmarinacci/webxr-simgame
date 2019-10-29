@@ -40,9 +40,9 @@ export class Instructions3DSystem extends System {
             inst.obj.position.z = -3
             inst.obj.position.y = 1.0
             inst.obj.position.x = 0
-            inst.obj.material.depthTest = false
-            inst.obj.material.depthWrite = false
-            inst.obj.renderOrder = 1000
+            // inst.obj.material.depthTest = false
+            // inst.obj.material.depthWrite = false
+            // inst.obj.renderOrder = 1000
             inst.customProps = {}
 
             const c = inst.getContext2D()

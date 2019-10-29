@@ -28,7 +28,7 @@ export class VRStatsSystem extends System {
                 new MeshBasicMaterial({map:stats.ctex})
             )
             stats.obj.position.z = -3
-            stats.obj.position.y = 1.0
+            stats.obj.position.y = 1.75
             stats.obj.position.x = 0
             stats.obj.material.depthTest = false
             stats.obj.material.depthWrite = false
