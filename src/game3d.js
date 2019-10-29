@@ -37,6 +37,10 @@ class VRSwitchingSystem extends System {
 
         //when entering VR
         this.queries.vr.added.forEach(()=>{
+            this.queries.three.results.forEach(ent => {
+                ent.getComponent(ThreeCore).stagePos.position.y = 0
+            })
+
             this.queries.desktoponly.results.forEach(ent => {
                 if(ent.hasComponent(Button3D)) ent.getComponent(Button3D).obj.visible = false
             })
@@ -47,6 +51,9 @@ class VRSwitchingSystem extends System {
 
         //when exiting VR
         this.queries.vr.removed.forEach(()=>{
+            this.queries.three.results.forEach(ent => {
+                ent.getComponent(ThreeCore).stagePos.position.y = -1.5
+            })
             this.queries.desktoponly.results.forEach(ent => {
                 if(ent.hasComponent(Button3D)) ent.getComponent(Button3D).obj.visible = true
             })
@@ -57,6 +64,9 @@ class VRSwitchingSystem extends System {
     }
 }
 VRSwitchingSystem.queries = {
+    three: {
+        components:[ThreeCore]
+    },
     vr: {
         components:[InsideVR],
         listen: {
@@ -113,10 +123,12 @@ function setupGame() {
 
     world.createEntity()
         .addComponent(VRController,{vrid:0})
-        .addComponent(Hand,{grabDistance:0.7})
+        .addComponent(Hand,{grabDistance:0.25})
+        .addComponent(ThreeNode)
     world.createEntity()
         .addComponent(VRController,{vrid:1})
-        .addComponent(Hand,{grabDistance:0.7})
+        .addComponent(Hand,{grabDistance:0.25})
+        .addComponent(ThreeNode)
 
     game.addComponent(VRStats)
     game.addComponent(Instructions3D)
@@ -169,20 +181,21 @@ function setupGame() {
     const y = 1.0
 
     const farmTool = world.createEntity()
-    farmTool.addComponent(ThreeNode, {position:{x:-1, z:-2, y:1}, color:'brown'})
-    farmTool.addComponent(SVGExtrudedObj,{scale:0.002, src:'src/hoe-svgrepo-com.svg', ccw:false})
+    farmTool.addComponent(ThreeNode, {position:{x:-1, z:-0.5, y:1}, color:'brown'})
+    farmTool.addComponent(SVGExtrudedObj,{scale:0.001, src:'src/hoe-svgrepo-com.svg', ccw:false})
     farmTool.addComponent(Grabable, {onGrab:(handEnt)=> {
-        handEnt.addComponent(SVGExtrudedObj,{scale:0.002, src:'src/hoe-svgrepo-com.svg', ccw:false})
+        handEnt.addComponent(SVGExtrudedObj,{scale:0.001, src:'src/hoe-svgrepo-com.svg', ccw:false})
     }})
     farmTool.addComponent(VROnly)
 
     const treeTool = world.createEntity()
-    treeTool.addComponent(ThreeNode, {color:'green',position:{x:-0.25, y:y, z:-0.5}})
+    treeTool.addComponent(ThreeNode, {color:'green', position:{x:-0.25, y:y, z:-0.5}})
     treeTool.addComponent(SimpleSphere, {radius:ss})
     treeTool.addComponent(Grabable, {onGrab:(handEnt)=> {
-        handEnt.addComponent(SimpleSphere, {radius:ss})
+        handEnt.addComponent(SimpleSphere)
         handEnt.getMutableComponent(VRController).inputMode = InputModes.PLANT_FOREST
     }})
+    treeTool.addComponent(VROnly)
 
     const chopTool = world.createEntity()
     chopTool.addComponent(ThreeNode, {color:'tan', position:{x:0.25, y:y, z:-0.5}})
@@ -191,14 +204,16 @@ function setupGame() {
         handEnt.addComponent(SimpleSphere, {radius:ss})
         handEnt.getMutableComponent(VRController).inputMode = InputModes.CHOP_WOOD
     }})
+    chopTool.addComponent(VROnly)
 
     const cityTool = world.createEntity()
-    treeTool.addComponent(ThreeNode, {color:'gray',position:{x:0.5, y:y, z:-0}})
+    cityTool.addComponent(ThreeNode, {color:'gray',position:{x:0.5, y:y, z:-0.5}})
     cityTool.addComponent(SimpleSphere, {radius:ss})
     cityTool.addComponent(Grabable, {onGrab:(handEnt)=>{
         handEnt.addComponent(SimpleSphere, {radius:ss})
         handEnt.getMutableComponent(VRController).inputMode = InputModes.BUILD_CITY
     }})
+    cityTool.addComponent(VROnly)
 
     oneWorldTick(game,world)
 
@@ -213,20 +228,20 @@ function setupGame() {
 
     //plant tree
     const gloves = world.createEntity()
-    gloves.addComponent(ThreeNode, {position:{x:1,z:-2, y:1}, color:'green'})
-    gloves.addComponent(SVGExtrudedObj,{scale:0.002, src:'src/glove-svgrepo-com.svg', ccw:false})
+    gloves.addComponent(ThreeNode, {position:{x:-0.5,z:-1, y:1}, color:'green'})
+    gloves.addComponent(SVGExtrudedObj,{scale:0.001, src:'src/glove-svgrepo-com.svg', ccw:false})
     gloves.addComponent(VROnly)
 
     //chop wood
     const axe = world.createEntity()
-    axe.addComponent(ThreeNode, {position:{x:-1,z:-2, y:1}, color:'tan'})
-    axe.addComponent(SVGExtrudedObj,{scale:0.002, src:'src/axe-svgrepo-com.svg', ccw:false})
+    axe.addComponent(ThreeNode, {position:{x:+0.5,z:-1, y:1}, color:'tan'})
+    axe.addComponent(SVGExtrudedObj,{scale:0.001, src:'src/axe-svgrepo-com.svg', ccw:false})
     axe.addComponent(VROnly)
 
     //build city
     const shovel = world.createEntity()
-    shovel.addComponent(ThreeNode, {position:{z:-2, y:1}, color:'gray'})
-    shovel.addComponent(SVGExtrudedObj,{scale:0.002, src:'src/shovel-svgrepo-com.svg', ccw:true})
+    shovel.addComponent(ThreeNode, {position:{x:1, z:-0.5, y:1}, color:'gray'})
+    shovel.addComponent(SVGExtrudedObj,{scale:0.001, src:'src/shovel-svgrepo-com.svg', ccw:true})
     shovel.addComponent(VROnly)
 
     startWorldLoop(game,world)

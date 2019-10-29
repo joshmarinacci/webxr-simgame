@@ -8,7 +8,7 @@ import {
     Vector3
 } from "../node_modules/three/build/three.module.js"
 import {System} from "../node_modules/ecsy/build/ecsy.module.js"
-import {ThreeCore} from './threesystem.js'
+import {ThreeCore, ThreeNode} from './threesystem.js'
 import {Button3D, Highlighted} from './hex3dsystem.js'
 import {
     CommandComp,
@@ -56,6 +56,8 @@ export class VRInputSystem extends System {
             geometry.addAttribute( 'color', new Float32BufferAttribute( [ 0.5, 0.5, 0.5, 0, 0, 0 ], 3 ) );
             const material = new LineBasicMaterial( { vertexColors: true, blending: AdditiveBlending } );
             con.controller.add( new Line( geometry, material ) );
+            const node = ent.getMutableComponent(ThreeNode)
+            con.controller.add(node.object)
         })
         this.queries.controllers.results.forEach(ent => {
             const cont = ent.getMutableComponent(VRController)
@@ -239,7 +241,7 @@ VRInputSystem.queries = {
         components: [ThreeCore]
     },
     controllers: {
-        components:[VRController],
+        components:[VRController, ThreeNode],
         listen: {
             added:true,
             removed:true,
