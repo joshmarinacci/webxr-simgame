@@ -129,6 +129,7 @@ function setupGame() {
         .addComponent(VRController,{vrid:1})
         .addComponent(Hand,{grabDistance:0.25})
         .addComponent(ThreeNode)
+        // .addComponent(SimpleSphere)
 
     game.addComponent(VRStats)
     game.addComponent(Instructions3D)
@@ -181,10 +182,11 @@ function setupGame() {
     const y = 1.0
 
     const farmTool = world.createEntity()
-    farmTool.addComponent(ThreeNode, {position:{x:-1, z:-0.5, y:1}, color:'brown'})
+    farmTool.addComponent(ThreeNode, {position:{x:-0.5, z:-0.5, y:1}, color:'brown'})
     farmTool.addComponent(SVGExtrudedObj,{scale:0.001, src:'src/hoe-svgrepo-com.svg', ccw:false})
     farmTool.addComponent(Grabable, {onGrab:(handEnt)=> {
         handEnt.addComponent(SVGExtrudedObj,{scale:0.001, src:'src/hoe-svgrepo-com.svg', ccw:false})
+        handEnt.getMutableComponent(VRController).inputMode = InputModes.PLANT_FARM
     }})
     farmTool.addComponent(VROnly)
 
@@ -192,8 +194,10 @@ function setupGame() {
     treeTool.addComponent(ThreeNode, {color:'green', position:{x:-0.25, y:y, z:-0.5}})
     treeTool.addComponent(SimpleSphere, {radius:ss})
     treeTool.addComponent(Grabable, {onGrab:(handEnt)=> {
-        handEnt.addComponent(SimpleSphere)
-        handEnt.getMutableComponent(VRController).inputMode = InputModes.PLANT_FOREST
+            setTimeout(()=>{
+                handEnt.addComponent(SimpleSphere, {radius:ss})
+                handEnt.getMutableComponent(VRController).inputMode = InputModes.PLANT_FOREST
+            },100)
     }})
     treeTool.addComponent(VROnly)
 
@@ -201,8 +205,10 @@ function setupGame() {
     chopTool.addComponent(ThreeNode, {color:'tan', position:{x:0.25, y:y, z:-0.5}})
     chopTool.addComponent(SimpleSphere, {radius:ss})
     chopTool.addComponent(Grabable, {onGrab:(handEnt)=>{
-        handEnt.addComponent(SimpleSphere, {radius:ss})
-        handEnt.getMutableComponent(VRController).inputMode = InputModes.CHOP_WOOD
+            setTimeout(()=> {
+                handEnt.addComponent(SimpleSphere, {radius: ss})
+                handEnt.getMutableComponent(VRController).inputMode = InputModes.CHOP_WOOD
+            },100)
     }})
     chopTool.addComponent(VROnly)
 

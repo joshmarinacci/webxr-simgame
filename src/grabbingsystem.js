@@ -51,6 +51,7 @@ export class GrabbingSystem extends System {
         })
 
         this.queries.spheres.added.forEach(ent => {
+            console.log("adding a sphere")
             const node = ent.getComponent(ThreeNode)
             const sphere = ent.getMutableComponent(SimpleSphere)
             sphere.obj = new Mesh(
@@ -74,7 +75,6 @@ export class GrabbingSystem extends System {
                 if(dist === 0) return // works around a bug
                 if(dist <= hand.grabDistance) {
                     if(hand.grabbed !== grabbableEnt ) {
-                        console.log("setting",hand.grabbed,grabbableEnt)
                         hand.grabbed = grabbableEnt
                         const grabber = grabbableEnt.getComponent(Grabable)
                         if(grabber.onGrab) grabber.onGrab(handEnt)
