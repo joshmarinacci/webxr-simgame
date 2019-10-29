@@ -10,6 +10,7 @@ import {
     SphereBufferGeometry,
     ExtrudeBufferGeometry,
 } from "../node_modules/three/build/three.module.js"
+import {VRController} from './vrinputsystem.js'
 
 
 
@@ -23,42 +24,53 @@ export class SVGExtrudedObj {
 
 export class SVGSystem extends System {
     execute() {
-        this.queries.objs.results.forEach(ent => {
-            const node = ent.getComponent(ThreeNode)
-            node.object.rotation.y+=0.01
-        })
         this.queries.objs.added.forEach(ent => {
             const svg = ent.getComponent(SVGExtrudedObj)
             const node = ent.getMutableComponent(ThreeNode)
-            const loader = new SVGLoader()
-            loader.load(svg.src,(data)=>{
-                const group = new Group()
-                data.paths.forEach(path => {
-                    const shapes = path.toShapes(svg.ccw)
-                    const mat = new MeshLambertMaterial({color:node.color})
-                    console.log("using the color",node.color)
-                    shapes.forEach(sh => {
-                        const geo = new ExtrudeBufferGeometry(sh,{
-                            steps:2,
-                            depth:16,
-                            bevelEnabled: true,
-                        })
-                        const s = svg.scale
-                        geo.scale(s,s,s)
-                        const mesh = new Mesh(geo,mat)
-                        group.add(mesh)
-                    })
-                })
-                node.object.add(group)
-                node.object.rotation.y = 0
-            })
+            this.loadSVG(svg,node.object, node.color)
         })
+        this.queries.controllerobjs.added.forEach(ent => {
+            const svg = ent.getComponent(SVGExtrudedObj)
+            const node = ent.getMutableComponent(VRController)
+            this.loadSVG(svg,node.controller, 'green')
+        })
+    }
+
+    loadSVG(svg, object, color) {
+        const loader = new SVGLoader()
+        loader.load(svg.src,(data)=>{
+            const group = new Group()
+            data.paths.forEach(path => {
+                const shapes = path.toShapes(svg.ccw)
+                const mat = new MeshLambertMaterial({color:color})
+                shapes.forEach(sh => {
+                    const geo = new ExtrudeBufferGeometry(sh,{
+                        steps:2,
+                        depth:16,
+                        bevelEnabled: true,
+                    })
+                    const s = svg.scale
+                    geo.scale(s,s,s)
+                    const mesh = new Mesh(geo,mat)
+                    group.add(mesh)
+                })
+            })
+            object.add(group)
+        })
+
     }
 }
 
 SVGSystem.queries = {
     objs: {
         components:[SVGExtrudedObj, ThreeNode],
+        listen: {
+            added:true,
+            removed:true
+        }
+    },
+    controllerobjs: {
+        components:[SVGExtrudedObj, VRController],
         listen: {
             added:true,
             removed:true
