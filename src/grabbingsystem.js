@@ -2,13 +2,10 @@ import {System} from "../node_modules/ecsy/build/ecsy.module.js"
 import {VRController} from './vrinputsystem.js'
 import {
     BoxBufferGeometry,
-    AmbientLight,
-    Color,
-    DirectionalLight,
     Mesh,
-    Vector3,
     MeshLambertMaterial,
-    SphereBufferGeometry
+    SphereBufferGeometry,
+    Vector3
 } from "../node_modules/three/build/three.module.js"
 import {ThreeCore, ThreeNode} from './threesystem.js'
 

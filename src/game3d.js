@@ -1,6 +1,6 @@
 import {AmbientLight, Color, DirectionalLight} from "../node_modules/three/build/three.module.js"
-import {System, World} from "../node_modules/ecsy/build/ecsy.module.js"
-import {InsideVR, oneWorldTick, startWorldLoop, ThreeCore, ThreeNode, ThreeSystem} from "./threesystem.js"
+import {World} from "../node_modules/ecsy/build/ecsy.module.js"
+import {oneWorldTick, startWorldLoop, ThreeCore, ThreeNode, ThreeSystem} from "./threesystem.js"
 import {Button3D, Hex3dsystem, HexMapView, ScoreBoard} from './hex3dsystem.js'
 import {MouseInputDevice, MouseInputSystem} from './mousesystem.js'
 import {KeyboardInputSystem} from "./keyboardsystem.js"
@@ -10,7 +10,7 @@ import {Level, LevelsSystem} from './levelssystem.js'
 import {VRStats, VRStatsSystem} from './vrstats.js'
 import {setupLevels} from './levels.js'
 import {Instructions3D, Instructions3DSystem} from './Instructions3D.js'
-import {Grabable, GrabbingSystem, Hand, SimpleSphere} from './grabbingsystem.js'
+import {Grabable, GrabbingSystem, Hand} from './grabbingsystem.js'
 import {SVGExtrudedObj, SVGSystem} from './SVGSystem.js'
 import {toRad} from './hex.js'
 import {DesktopOnly, VROnly, VRSwitchingSystem} from './vrswitchingsystem.js'

@@ -1,17 +1,8 @@
 import {System} from "../node_modules/ecsy/build/ecsy.module.js"
 import {ThreeNode} from './threesystem.js'
 import {SVGLoader} from '../node_modules/three/examples/jsm/loaders/SVGLoader.js'
-import {
-    Group,
-    Mesh,
-    MeshBasicMaterial,
-    MeshLambertMaterial,
-    ShapeBufferGeometry,
-    SphereBufferGeometry,
-    ExtrudeBufferGeometry,
-} from "../node_modules/three/build/three.module.js"
+import {ExtrudeBufferGeometry, Group, Mesh, MeshLambertMaterial} from "../node_modules/three/build/three.module.js"
 import {VRController} from './vrinputsystem.js'
-
 
 
 export class SVGExtrudedObj {
