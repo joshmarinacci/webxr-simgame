@@ -13,6 +13,7 @@ import {Instructions3D, Instructions3DSystem} from './Instructions3D.js'
 import {Grabable, GrabbingSystem, Hand, SimpleSphere} from './grabbingsystem.js'
 import {SVGExtrudedObj, SVGSystem} from './SVGSystem.js'
 import {toRad} from './hex.js'
+import {DesktopOnly, VROnly, VRSwitchingSystem} from './vrswitchingsystem.js'
 
 
 let game
@@ -27,68 +28,86 @@ function setupLights(core) {
     core.scene.add(ambient)
 }
 
-class DesktopOnly {}
-class VROnly {}
-class VRSwitchingSystem extends System {
-    execute() {
-        //make sure VR objects are disabled
-        this.queries.vronly.added.forEach(ent => {
-            if(ent.hasComponent(ThreeNode)) ent.getComponent(ThreeNode).object.visible = false
-        })
+function setupVRGrabbableObjects(world) {
+    const y = 1.0
 
-        //when entering VR
-        this.queries.vr.added.forEach(()=>{
-            this.queries.three.results.forEach(ent => {
-                ent.getComponent(ThreeCore).stagePos.position.y = 0
-            })
-
-            this.queries.desktoponly.results.forEach(ent => {
-                if(ent.hasComponent(Button3D)) ent.getComponent(Button3D).obj.visible = false
-            })
-            this.queries.vronly.results.forEach(ent => {
-                if(ent.hasComponent(ThreeNode)) ent.getComponent(ThreeNode).object.visible = true
-            })
-        })
-
-        //when exiting VR
-        this.queries.vr.removed.forEach(()=>{
-            this.queries.three.results.forEach(ent => {
-                ent.getComponent(ThreeCore).stagePos.position.y = -1.5
-            })
-            this.queries.desktoponly.results.forEach(ent => {
-                if(ent.hasComponent(Button3D)) ent.getComponent(Button3D).obj.visible = true
-            })
-            this.queries.vronly.results.forEach(ent => {
-                if(ent.hasComponent(ThreeNode)) ent.getComponent(ThreeNode).object.visible = false
-            })
-        })
+    const farmTool = world.createEntity()
+    const farmRot = {
+        x:toRad(-90),
+        y:toRad(-45),
+        z:toRad(-90-45+45),
     }
-}
-VRSwitchingSystem.queries = {
-    three: {
-        components:[ThreeCore]
-    },
-    vr: {
-        components:[InsideVR],
-        listen: {
-            added:true,
-            removed:true
-        }
-    },
-    desktoponly: {
-        components:[DesktopOnly],
-        listen: {
-            added:true,
-            removed:true
-        }
-    },
-    vronly: {
-        components:[VROnly],
-        listen: {
-            added:true,
-            removed:true
-        }
-    },
+    const farmTrans = {
+        x:0.0,
+        y:0.3,
+        z:-0.3
+    }
+    farmTool.addComponent(ThreeNode, {position:{x:-0.5, z:-0.5, y:1}, color:'brown'})
+    farmTool.addComponent(SVGExtrudedObj,{scale:0.001, src:'src/hoe-svgrepo-com.svg',  ccw:false, rotation:farmRot, translate:farmTrans })
+    farmTool.addComponent(Grabable, {onGrab:(handEnt)=> {
+            handEnt.addComponent(SVGExtrudedObj,{scale:0.001, src:'src/hoe-svgrepo-com.svg', ccw:false, rotation:farmRot, translate: farmTrans })
+            handEnt.getMutableComponent(VRController).inputMode = InputModes.PLANT_FARM
+        }})
+    farmTool.addComponent(VROnly)
+
+    const treeTool = world.createEntity()
+    const treeRot = {
+        x:toRad(-45-45),
+        y:toRad(+90),
+        z:toRad(90+45),
+    }
+    const treeTrans = {
+        y:0.1,
+        x:-0.1,
+        z:-0.2
+    }
+    treeTool.addComponent(ThreeNode, {position:{x:-0.25, y:y, z:-0.5}, color:'green'})
+    treeTool.addComponent(SVGExtrudedObj,{scale:0.001, src:'src/glove-svgrepo-com.svg', ccw:false, rotation:treeRot, translate:treeTrans})
+    treeTool.addComponent(Grabable, {onGrab:(handEnt)=> {
+            handEnt.addComponent(SVGExtrudedObj,{scale:0.001, src:'src/glove-svgrepo-com.svg', ccw:false, rotation:treeRot, translate: treeTrans })
+            handEnt.getMutableComponent(VRController).inputMode = InputModes.PLANT_FOREST
+        }})
+    treeTool.addComponent(VROnly)
+
+
+    const chopTool = world.createEntity()
+    const chopRot = {
+        x:toRad(90),
+        y:toRad(+0),
+        z:toRad(+90),
+    }
+    const chopTrans = {
+        x:0.0,
+        y:-0.3,
+        z:-0.5
+    }
+    chopTool.addComponent(ThreeNode, {color:'tan', position:{x:0.25, y:y, z:-0.5}})
+    chopTool.addComponent(SVGExtrudedObj,{scale:0.001, src:'src/axe-svgrepo-com.svg', ccw:false, rotation:chopRot, translate:chopTrans})
+    chopTool.addComponent(Grabable, {onGrab:(handEnt)=>{
+            handEnt.addComponent(SVGExtrudedObj,{scale:0.001, src:'src/axe-svgrepo-com.svg', ccw:false, rotation:chopRot,
+                translate:chopTrans})
+            handEnt.getMutableComponent(VRController).inputMode = InputModes.CHOP_WOOD
+        }})
+    chopTool.addComponent(VROnly)
+
+    const cityTool = world.createEntity()
+    const cityRot = {
+        x:toRad(-90),
+        y:toRad(+0),
+        z:toRad(+90),
+    }
+    const cityTrans = {
+        x:0.0,
+        y:-0.3,
+        z:-0.0
+    }
+    cityTool.addComponent(ThreeNode, {color:'gray',position:{x:0.5, y:y, z:-0.5}})
+    cityTool.addComponent(SVGExtrudedObj,{scale:0.001, src:'src/shovel-svgrepo-com.svg', ccw:true, rotation:cityRot, translate:cityTrans})
+    cityTool.addComponent(Grabable, {onGrab:(handEnt)=>{
+            handEnt.addComponent(SVGExtrudedObj,{scale:0.001, src:'src/shovel-svgrepo-com.svg', ccw:true, rotation:cityRot, translate:cityTrans})
+            handEnt.getMutableComponent(VRController).inputMode = InputModes.BUILD_CITY
+        }})
+    cityTool.addComponent(VROnly)
 
 }
 
@@ -179,87 +198,7 @@ function setupGame() {
 
 
 
-    const ss = 0.10
-    const y = 1.0
-
-    const farmTool = world.createEntity()
-    const farmRot = {
-        x:toRad(-90),
-        y:toRad(-45),
-        z:toRad(-90-45+45),
-    }
-    const farmTrans = {
-        x:0.0,
-        y:0.3,
-        z:-0.3
-    }
-    farmTool.addComponent(ThreeNode, {position:{x:-0.5, z:-0.5, y:1}, color:'brown'})
-    farmTool.addComponent(SVGExtrudedObj,{scale:0.001, src:'src/hoe-svgrepo-com.svg',  ccw:false, rotation:farmRot, translate:farmTrans })
-    farmTool.addComponent(Grabable, {onGrab:(handEnt)=> {
-        handEnt.addComponent(SVGExtrudedObj,{scale:0.001, src:'src/hoe-svgrepo-com.svg', ccw:false, rotation:farmRot, translate: farmTrans })
-        handEnt.getMutableComponent(VRController).inputMode = InputModes.PLANT_FARM
-    }})
-    farmTool.addComponent(VROnly)
-
-    const treeTool = world.createEntity()
-    const treeRot = {
-        x:toRad(-45-45),
-        y:toRad(+90),
-        z:toRad(90+45),
-    }
-    const treeTrans = {
-        y:0.1,
-        x:-0.1,
-        z:-0.2
-    }
-    treeTool.addComponent(ThreeNode, {position:{x:-0.25, y:y, z:-0.5}, color:'green'})
-    treeTool.addComponent(SVGExtrudedObj,{scale:0.001, src:'src/glove-svgrepo-com.svg', ccw:false, rotation:treeRot, translate:treeTrans})
-    treeTool.addComponent(Grabable, {onGrab:(handEnt)=> {
-            handEnt.addComponent(SVGExtrudedObj,{scale:0.001, src:'src/glove-svgrepo-com.svg', ccw:false, rotation:treeRot, translate: treeTrans })
-            handEnt.getMutableComponent(VRController).inputMode = InputModes.PLANT_FOREST
-        }})
-    treeTool.addComponent(VROnly)
-
-
-    const chopTool = world.createEntity()
-    const chopRot = {
-        x:toRad(90),
-        y:toRad(+0),
-        z:toRad(+90),
-    }
-    const chopTrans = {
-        x:0.0,
-        y:-0.3,
-        z:-0.5
-    }
-    chopTool.addComponent(ThreeNode, {color:'tan', position:{x:0.25, y:y, z:-0.5}})
-    chopTool.addComponent(SVGExtrudedObj,{scale:0.001, src:'src/axe-svgrepo-com.svg', ccw:false, rotation:chopRot, translate:chopTrans})
-    chopTool.addComponent(Grabable, {onGrab:(handEnt)=>{
-            handEnt.addComponent(SVGExtrudedObj,{scale:0.001, src:'src/axe-svgrepo-com.svg', ccw:false, rotation:chopRot,
-            translate:chopTrans})
-            handEnt.getMutableComponent(VRController).inputMode = InputModes.CHOP_WOOD
-    }})
-    chopTool.addComponent(VROnly)
-
-    const cityTool = world.createEntity()
-    const cityRot = {
-        x:toRad(-90),
-        y:toRad(+0),
-        z:toRad(+90),
-    }
-    const cityTrans = {
-        x:0.0,
-        y:-0.3,
-        z:-0.0
-    }
-    cityTool.addComponent(ThreeNode, {color:'gray',position:{x:0.5, y:y, z:-0.5}})
-    cityTool.addComponent(SVGExtrudedObj,{scale:0.001, src:'src/shovel-svgrepo-com.svg', ccw:true, rotation:cityRot, translate:cityTrans})
-    cityTool.addComponent(Grabable, {onGrab:(handEnt)=>{
-            handEnt.addComponent(SVGExtrudedObj,{scale:0.001, src:'src/shovel-svgrepo-com.svg', ccw:true, rotation:cityRot, translate:cityTrans})
-        handEnt.getMutableComponent(VRController).inputMode = InputModes.BUILD_CITY
-    }})
-    cityTool.addComponent(VROnly)
-
+    setupVRGrabbableObjects(world)
     oneWorldTick(game,world)
 
     farmButton.getComponent(Button3D).obj.position.x = -2.5
@@ -271,5 +210,6 @@ function setupGame() {
 
     startWorldLoop(game,world)
 }
+
 
 setupGame()
