@@ -71,7 +71,7 @@ export class VRInputSystem extends System {
         const dir = new Vector3(0, 0, -1)
         dir.applyQuaternion(cont.controller.quaternion)
         cont.raycaster.set(cont.controller.position, dir)
-        const intersects = cont.raycaster.intersectObjects(core.scene.children,true)
+        const intersects = cont.raycaster.intersectObjects(core.getStage().children,true)
         for(let i=0; i<intersects.length; i++) {
             const it = intersects[i]
             if(it.object.userData.hex) {

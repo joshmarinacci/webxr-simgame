@@ -7,7 +7,11 @@ import {VRController} from './vrinputsystem.js'
 
 export class SVGExtrudedObj {
     constructor() {
+        this.resets()
+    }
+    resets() {
         this.src = null
+        this.group = null
         this.scale = 1.0
         this.ccw = false
         this.rotation = null
@@ -18,14 +22,26 @@ export class SVGExtrudedObj {
 export class SVGSystem extends System {
     execute() {
         this.queries.objs.added.forEach(ent => {
-            const svg = ent.getComponent(SVGExtrudedObj)
             const node = ent.getMutableComponent(ThreeNode)
+            const svg = ent.getComponent(SVGExtrudedObj)
             this.loadSVG(svg,node.object, node.color)
         })
+        this.queries.objs.removed.forEach(ent => {
+            const node = ent.getMutableComponent(ThreeNode)
+            const svg = ent.getRemovedComponent(SVGExtrudedObj)
+            if(!svg) return
+            node.object.remove(svg.group)
+        })
         this.queries.controllerobjs.added.forEach(ent => {
-            const svg = ent.getComponent(SVGExtrudedObj)
             const node = ent.getMutableComponent(VRController)
+            const svg = ent.getComponent(SVGExtrudedObj)
             this.loadSVG(svg,node.controller, 'green')
+        })
+        this.queries.controllerobjs.removed.forEach(ent => {
+            const node = ent.getMutableComponent(VRController)
+            const svg = ent.getRemovedComponent(SVGExtrudedObj)
+            if(!svg) return
+            node.controller.remove(svg.group)
         })
     }
 
@@ -56,6 +72,7 @@ export class SVGSystem extends System {
                     group.add(mesh)
                 })
             })
+            svg.group = group
             object.add(group)
         })
 

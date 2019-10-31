@@ -28,6 +28,14 @@ function setupLights(core) {
     core.scene.add(ambient)
 }
 
+function swap(handEnt, settings, mode) {
+    if(handEnt.hasComponent(SVGExtrudedObj)) {
+        handEnt.removeComponent(SVGExtrudedObj)
+    }
+    handEnt.addComponent(SVGExtrudedObj,settings)
+    handEnt.getMutableComponent(VRController).inputMode = mode
+}
+
 function setupVRGrabbableObjects(world) {
     const y = 1.0
 
@@ -42,11 +50,16 @@ function setupVRGrabbableObjects(world) {
         y:0.3,
         z:-0.3
     }
-    farmTool.addComponent(ThreeNode, {position:{x:-0.5, z:-0.5, y:1}, color:'brown'})
+    farmTool.addComponent(ThreeNode, {position:{x:-0.5, y:y, z:-0.3}, color:'brown'})
     farmTool.addComponent(SVGExtrudedObj,{scale:0.001, src:'src/hoe-svgrepo-com.svg',  ccw:false, rotation:farmRot, translate:farmTrans })
     farmTool.addComponent(Grabable, {onGrab:(handEnt)=> {
-            handEnt.addComponent(SVGExtrudedObj,{scale:0.001, src:'src/hoe-svgrepo-com.svg', ccw:false, rotation:farmRot, translate: farmTrans })
-            handEnt.getMutableComponent(VRController).inputMode = InputModes.PLANT_FARM
+        swap(handEnt, {
+                    scale: 0.001,
+                    src: 'src/hoe-svgrepo-com.svg',
+                    ccw: false,
+                    rotation: farmRot,
+                    translate: farmTrans
+                },InputModes.PLANT_FARM)
         }})
     farmTool.addComponent(VROnly)
 
@@ -61,11 +74,16 @@ function setupVRGrabbableObjects(world) {
         x:-0.1,
         z:-0.2
     }
-    treeTool.addComponent(ThreeNode, {position:{x:-0.25, y:y, z:-0.5}, color:'green'})
+    treeTool.addComponent(ThreeNode, {position:{x:-0.25, y:y, z:-0.3}, color:'green'})
     treeTool.addComponent(SVGExtrudedObj,{scale:0.001, src:'src/glove-svgrepo-com.svg', ccw:false, rotation:treeRot, translate:treeTrans})
     treeTool.addComponent(Grabable, {onGrab:(handEnt)=> {
-            handEnt.addComponent(SVGExtrudedObj,{scale:0.001, src:'src/glove-svgrepo-com.svg', ccw:false, rotation:treeRot, translate: treeTrans })
-            handEnt.getMutableComponent(VRController).inputMode = InputModes.PLANT_FOREST
+        swap(handEnt,{
+                    scale: 0.001,
+                    src: 'src/glove-svgrepo-com.svg',
+                    ccw: false,
+                    rotation: treeRot,
+                    translate: treeTrans
+                },InputModes.PLANT_FOREST)
         }})
     treeTool.addComponent(VROnly)
 
@@ -81,12 +99,13 @@ function setupVRGrabbableObjects(world) {
         y:-0.3,
         z:-0.5
     }
-    chopTool.addComponent(ThreeNode, {color:'tan', position:{x:0.25, y:y, z:-0.5}})
+    chopTool.addComponent(ThreeNode, {color:'tan', position:{x:0.25, y:y, z:-0.3}})
     chopTool.addComponent(SVGExtrudedObj,{scale:0.001, src:'src/axe-svgrepo-com.svg', ccw:false, rotation:chopRot, translate:chopTrans})
     chopTool.addComponent(Grabable, {onGrab:(handEnt)=>{
-            handEnt.addComponent(SVGExtrudedObj,{scale:0.001, src:'src/axe-svgrepo-com.svg', ccw:false, rotation:chopRot,
-                translate:chopTrans})
-            handEnt.getMutableComponent(VRController).inputMode = InputModes.CHOP_WOOD
+        swap(handEnt,{
+                    scale: 0.001, src: 'src/axe-svgrepo-com.svg', ccw: false, rotation: chopRot,
+                    translate: chopTrans
+                },InputModes.CHOP_WOOD)
         }})
     chopTool.addComponent(VROnly)
 
@@ -101,11 +120,16 @@ function setupVRGrabbableObjects(world) {
         y:-0.3,
         z:-0.0
     }
-    cityTool.addComponent(ThreeNode, {color:'gray',position:{x:0.5, y:y, z:-0.5}})
+    cityTool.addComponent(ThreeNode, {color:'gray',position:{x:0.5, y:y, z:-0.3}})
     cityTool.addComponent(SVGExtrudedObj,{scale:0.001, src:'src/shovel-svgrepo-com.svg', ccw:true, rotation:cityRot, translate:cityTrans})
     cityTool.addComponent(Grabable, {onGrab:(handEnt)=>{
-            handEnt.addComponent(SVGExtrudedObj,{scale:0.001, src:'src/shovel-svgrepo-com.svg', ccw:true, rotation:cityRot, translate:cityTrans})
-            handEnt.getMutableComponent(VRController).inputMode = InputModes.BUILD_CITY
+        swap(handEnt,{
+                    scale: 0.001,
+                    src: 'src/shovel-svgrepo-com.svg',
+                    ccw: true,
+                    rotation: cityRot,
+                    translate: cityTrans
+                }, InputModes.BUILD_CITY)
         }})
     cityTool.addComponent(VROnly)
 
