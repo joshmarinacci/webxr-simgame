@@ -12,6 +12,7 @@ import {setupLevels} from './levels.js'
 import {Instructions3D, Instructions3DSystem} from './Instructions3D.js'
 import {Grabable, GrabbingSystem, Hand, SimpleSphere} from './grabbingsystem.js'
 import {SVGExtrudedObj, SVGSystem} from './SVGSystem.js'
+import {toRad} from './hex.js'
 
 
 let game
@@ -182,24 +183,43 @@ function setupGame() {
     const y = 1.0
 
     const farmTool = world.createEntity()
+    const farmRot = {
+        x:toRad(-90),
+        y:toRad(-45),
+        z:toRad(-90-45+45),
+    }
+    const farmTrans = {
+        x:0.0,
+        y:0.3,
+        z:-0.3
+    }
     farmTool.addComponent(ThreeNode, {position:{x:-0.5, z:-0.5, y:1}, color:'brown'})
-    farmTool.addComponent(SVGExtrudedObj,{scale:0.001, src:'src/hoe-svgrepo-com.svg', ccw:false})
+    farmTool.addComponent(SVGExtrudedObj,{scale:0.001, src:'src/hoe-svgrepo-com.svg',  ccw:false, rotation:farmRot, translate:farmTrans })
     farmTool.addComponent(Grabable, {onGrab:(handEnt)=> {
-        handEnt.addComponent(SVGExtrudedObj,{scale:0.001, src:'src/hoe-svgrepo-com.svg', ccw:false})
+        handEnt.addComponent(SVGExtrudedObj,{scale:0.001, src:'src/hoe-svgrepo-com.svg', ccw:false, rotation:farmRot, translate: farmTrans })
         handEnt.getMutableComponent(VRController).inputMode = InputModes.PLANT_FARM
     }})
     farmTool.addComponent(VROnly)
 
     const treeTool = world.createEntity()
-    treeTool.addComponent(ThreeNode, {color:'green', position:{x:-0.25, y:y, z:-0.5}})
-    treeTool.addComponent(SimpleSphere, {radius:ss})
+    const treeRot = {
+        x:toRad(-45-45),
+        y:toRad(+90),
+        z:toRad(90+45),
+    }
+    const treeTrans = {
+        y:0.1,
+        x:-0.1,
+        z:-0.2
+    }
+    treeTool.addComponent(ThreeNode, {position:{x:-0.25, y:y, z:-0.5}, color:'green'})
+    treeTool.addComponent(SVGExtrudedObj,{scale:0.001, src:'src/glove-svgrepo-com.svg', ccw:false, rotation:treeRot, translate:treeTrans})
     treeTool.addComponent(Grabable, {onGrab:(handEnt)=> {
-            setTimeout(()=>{
-                handEnt.addComponent(SimpleSphere, {radius:ss})
-                handEnt.getMutableComponent(VRController).inputMode = InputModes.PLANT_FOREST
-            },100)
-    }})
+            handEnt.addComponent(SVGExtrudedObj,{scale:0.001, src:'src/glove-svgrepo-com.svg', ccw:false, rotation:treeRot, translate: treeTrans })
+            handEnt.getMutableComponent(VRController).inputMode = InputModes.PLANT_FOREST
+        }})
     treeTool.addComponent(VROnly)
+
 
     const chopTool = world.createEntity()
     chopTool.addComponent(ThreeNode, {color:'tan', position:{x:0.25, y:y, z:-0.5}})
@@ -233,10 +253,6 @@ function setupGame() {
     //make farm
 
     //plant tree
-    const gloves = world.createEntity()
-    gloves.addComponent(ThreeNode, {position:{x:-0.5,z:-1, y:1}, color:'green'})
-    gloves.addComponent(SVGExtrudedObj,{scale:0.001, src:'src/glove-svgrepo-com.svg', ccw:false})
-    gloves.addComponent(VROnly)
 
     //chop wood
     const axe = world.createEntity()

@@ -51,6 +51,14 @@ export class SVGSystem extends System {
                     })
                     const s = svg.scale
                     geo.scale(s,s,s)
+                    if(svg.rotation && svg.rotation.x) geo.rotateX(svg.rotation.x)
+                    if(svg.rotation && svg.rotation.y) geo.rotateY(svg.rotation.y)
+                    if(svg.rotation && svg.rotation.z) geo.rotateZ(svg.rotation.z)
+                    if(svg.translate) {
+                        if(svg.translate.x) geo.translate(svg.translate.x,0,0)
+                        if(svg.translate.y) geo.translate(0,svg.translate.y,0)
+                        if(svg.translate.z) geo.translate(0,0,svg.translate.z)
+                    }
                     const mesh = new Mesh(geo,mat)
                     group.add(mesh)
                 })

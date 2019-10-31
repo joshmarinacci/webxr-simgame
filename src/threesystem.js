@@ -48,6 +48,8 @@ export class ThreeSystem extends System {
                 if (node.position && node.position.x) node.object.position.x = node.position.x
                 if (node.position && node.position.y) node.object.position.y = node.position.y
                 if (node.position && node.position.z) node.object.position.z = node.position.z
+                if (node.rotation && node.rotation.x) node.object.rotation.x = node.rotation.x
+                if (node.rotation && node.rotation.y) node.object.rotation.y = node.rotation.y
             }
             const core = this.queries.three.results[0].getComponent(ThreeCore)
             core.getStage().add(node.object)
