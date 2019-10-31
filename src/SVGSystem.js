@@ -19,6 +19,8 @@ export class SVGExtrudedObj {
         this.src = null
         this.scale = 1.0
         this.ccw = false
+        this.rotation = null
+        this.translate = null
     }
 }
 

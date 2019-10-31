@@ -222,21 +222,40 @@ function setupGame() {
 
 
     const chopTool = world.createEntity()
+    const chopRot = {
+        x:toRad(90),
+        y:toRad(+0),
+        z:toRad(+90),
+    }
+    const chopTrans = {
+        x:0.0,
+        y:-0.3,
+        z:-0.5
+    }
     chopTool.addComponent(ThreeNode, {color:'tan', position:{x:0.25, y:y, z:-0.5}})
-    chopTool.addComponent(SimpleSphere, {radius:ss})
+    chopTool.addComponent(SVGExtrudedObj,{scale:0.001, src:'src/axe-svgrepo-com.svg', ccw:false, rotation:chopRot, translate:chopTrans})
     chopTool.addComponent(Grabable, {onGrab:(handEnt)=>{
-            setTimeout(()=> {
-                handEnt.addComponent(SimpleSphere, {radius: ss})
-                handEnt.getMutableComponent(VRController).inputMode = InputModes.CHOP_WOOD
-            },100)
+            handEnt.addComponent(SVGExtrudedObj,{scale:0.001, src:'src/axe-svgrepo-com.svg', ccw:false, rotation:chopRot,
+            translate:chopTrans})
+            handEnt.getMutableComponent(VRController).inputMode = InputModes.CHOP_WOOD
     }})
     chopTool.addComponent(VROnly)
 
     const cityTool = world.createEntity()
+    const cityRot = {
+        x:toRad(-90),
+        y:toRad(+0),
+        z:toRad(+90),
+    }
+    const cityTrans = {
+        x:0.0,
+        y:-0.3,
+        z:-0.0
+    }
     cityTool.addComponent(ThreeNode, {color:'gray',position:{x:0.5, y:y, z:-0.5}})
-    cityTool.addComponent(SimpleSphere, {radius:ss})
+    cityTool.addComponent(SVGExtrudedObj,{scale:0.001, src:'src/shovel-svgrepo-com.svg', ccw:true, rotation:cityRot, translate:cityTrans})
     cityTool.addComponent(Grabable, {onGrab:(handEnt)=>{
-        handEnt.addComponent(SimpleSphere, {radius:ss})
+            handEnt.addComponent(SVGExtrudedObj,{scale:0.001, src:'src/shovel-svgrepo-com.svg', ccw:true, rotation:cityRot, translate:cityTrans})
         handEnt.getMutableComponent(VRController).inputMode = InputModes.BUILD_CITY
     }})
     cityTool.addComponent(VROnly)
@@ -249,22 +268,6 @@ function setupGame() {
     cityButton.getComponent(Button3D).obj.position.x = +2.5
 
     setupLights(core)
-
-    //make farm
-
-    //plant tree
-
-    //chop wood
-    const axe = world.createEntity()
-    axe.addComponent(ThreeNode, {position:{x:+0.5,z:-1, y:1}, color:'tan'})
-    axe.addComponent(SVGExtrudedObj,{scale:0.001, src:'src/axe-svgrepo-com.svg', ccw:false})
-    axe.addComponent(VROnly)
-
-    //build city
-    const shovel = world.createEntity()
-    shovel.addComponent(ThreeNode, {position:{x:1, z:-0.5, y:1}, color:'gray'})
-    shovel.addComponent(SVGExtrudedObj,{scale:0.001, src:'src/shovel-svgrepo-com.svg', ccw:true})
-    shovel.addComponent(VROnly)
 
     startWorldLoop(game,world)
 }
