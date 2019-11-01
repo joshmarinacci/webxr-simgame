@@ -167,13 +167,12 @@ function setupGame() {
 
     world.createEntity()
         .addComponent(VRController,{vrid:0})
-        .addComponent(Hand,{grabDistance:0.25})
+        .addComponent(Hand,{grabDistance:0.15})
         .addComponent(ThreeNode)
     world.createEntity()
         .addComponent(VRController,{vrid:1})
-        .addComponent(Hand,{grabDistance:0.25})
+        .addComponent(Hand,{grabDistance:0.15})
         .addComponent(ThreeNode)
-        // .addComponent(SimpleSphere)
 
     game.addComponent(VRStats)
     game.addComponent(Instructions3D)

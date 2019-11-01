@@ -24,24 +24,16 @@ export class SVGSystem extends System {
         this.queries.objs.added.forEach(ent => {
             const node = ent.getMutableComponent(ThreeNode)
             const svg = ent.getComponent(SVGExtrudedObj)
+            // console.log("obj added",svg)
+            if(!svg) return
             this.loadSVG(svg,node.object, node.color)
         })
         this.queries.objs.removed.forEach(ent => {
             const node = ent.getMutableComponent(ThreeNode)
             const svg = ent.getRemovedComponent(SVGExtrudedObj)
+            // console.log("obj removed",svg)
             if(!svg) return
             node.object.remove(svg.group)
-        })
-        this.queries.controllerobjs.added.forEach(ent => {
-            const node = ent.getMutableComponent(VRController)
-            const svg = ent.getComponent(SVGExtrudedObj)
-            this.loadSVG(svg,node.controller, 'green')
-        })
-        this.queries.controllerobjs.removed.forEach(ent => {
-            const node = ent.getMutableComponent(VRController)
-            const svg = ent.getRemovedComponent(SVGExtrudedObj)
-            if(!svg) return
-            node.controller.remove(svg.group)
         })
     }
 
@@ -82,13 +74,6 @@ export class SVGSystem extends System {
 SVGSystem.queries = {
     objs: {
         components:[SVGExtrudedObj, ThreeNode],
-        listen: {
-            added:true,
-            removed:true
-        }
-    },
-    controllerobjs: {
-        components:[SVGExtrudedObj, VRController],
         listen: {
             added:true,
             removed:true
