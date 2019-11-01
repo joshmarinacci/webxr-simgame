@@ -50,7 +50,7 @@ function setupVRGrabbableObjects(world) {
         y:0.3,
         z:-0.3
     }
-    farmTool.addComponent(ThreeNode, {position:{x:-0.5, y:y, z:-0.3}, color:'brown'})
+    farmTool.addComponent(ThreeNode, {position:{x:-0.75, y:y, z:-0.3}, color:'brown'})
     farmTool.addComponent(SVGExtrudedObj,{scale:0.001, src:'src/hoe-svgrepo-com.svg',  ccw:false, rotation:farmRot, translate:farmTrans })
     farmTool.addComponent(Grabable, {onGrab:(handEnt)=> {
         swap(handEnt, {
@@ -120,7 +120,7 @@ function setupVRGrabbableObjects(world) {
         y:-0.3,
         z:-0.0
     }
-    cityTool.addComponent(ThreeNode, {color:'gray',position:{x:0.5, y:y, z:-0.3}})
+    cityTool.addComponent(ThreeNode, {color:'gray',position:{x:0.75, y:y, z:-0.3}})
     cityTool.addComponent(SVGExtrudedObj,{scale:0.001, src:'src/shovel-svgrepo-com.svg', ccw:true, rotation:cityRot, translate:cityTrans})
     cityTool.addComponent(Grabable, {onGrab:(handEnt)=>{
         swap(handEnt,{
@@ -167,11 +167,11 @@ function setupGame() {
 
     world.createEntity()
         .addComponent(VRController,{vrid:0})
-        .addComponent(Hand,{grabDistance:0.15})
+        .addComponent(Hand,{grabDistance:0.20})
         .addComponent(ThreeNode)
     world.createEntity()
         .addComponent(VRController,{vrid:1})
-        .addComponent(Hand,{grabDistance:0.15})
+        .addComponent(Hand,{grabDistance:0.20})
         .addComponent(ThreeNode)
 
     game.addComponent(VRStats)
